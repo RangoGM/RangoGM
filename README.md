@@ -11,8 +11,8 @@
 #### I am a networking and security enthusiast based in Ho Chi Minh City, focused on securing infrastructure and understanding real-world protocol behavior.
 #### I continuously build lab environments to simulate attacks, validate configurations, and strengthen defensive network design.
 
-- 🛡️ **Research Project:** [**Design and Empirical Evaluation of a Layered Access-Control Security Model for Enterprise Access Networks**](https://github.com/RangoGM/My-2nd-brain)
-- 🧠 **Documentation:** Every lab and research finding is documented in my **[My 2nd brain](https://github.com/RangoGM/My-2nd-brain)** repository.
+- 🛡️ **Research Project:** **Design and Empirical Evaluation of a Layered Access-Control Security Model for Enterprise Access Networks**
+- 🧠 **Documentation:** Every lab and research finding is documented in my **[My 2nd brain](https://github.com/RangoGM/ccna-labs)** repository.
 
 ---
 
