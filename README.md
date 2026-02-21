@@ -21,37 +21,12 @@
 
 <div align="center">
   
-<table>
-  <tr>
-    <td width="300"><b>💻 Virtualization & Network Engine</b></td>
-    <td>
-      <img src="https://cdn.simpleicons.org/vmware/607078" height="35" alt="VMware" style="vertical-align: middle;" />
-      <img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="35" alt="Cisco" style="vertical-align: middle; margin-left: 10px;" />
-    </td>
-  </tr>
-  <tr>
-    <td><b>🐧 Operating Systems</b></td>
-    <td>
-      <img src="https://skillicons.dev/icons?i=linux" height="35" style="vertical-align: middle;" />
-      <img src="https://skillicons.dev/icons?i=kali" height="35" style="vertical-align: middle; margin-left: 10px;" />
-      <img src="https://skillicons.dev/icons?i=windows" height="35" style="vertical-align: middle; margin-left: 10px;" />
-      <img src="https://skillicons.dev/icons?i=ubuntu" height="35" style="vertical-align: middle; margin-left: 10px;" />
-    </td>
-  </tr>
-  <tr>
-    <td><b>🔍 Analysis & Kernel Tuning</b></td>
-    <td>
-      <img src="https://cdn.simpleicons.org/wireshark/1679A7" height=30" alt="Wireshark" style="vertical-align: middle;" />
-      <img src="https://skillicons.dev/icons?i=bash" height="30" alt="Tcpdump/CLI Tools" style="vertical-align: middle; margin-left: 15px;" title="CLI Analysis (Tcpdump)" />
-    </td>
-  </tr>
-  <tr>
-    <td><b>📚 Currently Learning (Theory)</td>
-    <td>
-      <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="30" style="vertical-align: middle;" />
-    </td>
-  </tr>
-</table>
+| Category | Icons | Focus & Expertise |
+| -------- | ----- | ----------------- |
+| **Virtualization** | <img src="https://cdn.simpleicons.org/vmware/607078" height="35" /> <img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="35" /> | **Cisco Modeling Labs (CML), VMware Workstation** |
+| **Operating Systems** | <img src="https://skillicons.dev/icons?i=linux,kali,windows,ubuntu" height="35" /> | **Security testing on Kali, Server management on Ubuntu**|
+| **Analysis** | <img src="https://cdn.simpleicons.org/wireshark/1679A7" height="35" />   <img src="https://skillicons.dev/icons?i=bash" height="35" alt="Tcpdump/CLI Tools" style="vertical-align: middle; margin-left: 15px;" title="CLI Analysis (Tcpdump)" /> | **Packet Analysis, Network Scanning & Vulnerability Audit** |
+| **Learning** | <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="35" /> | **NetDevOps Theory: Infrastructure as Code & Scripting**|
 
 </div>
 
@@ -59,12 +34,22 @@
 
 <div align="center">
   <h3>📜 Certifications</h3>
-  <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-    <img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="90" alt="Cisco Networking Basics">
-  </a>
-  <p>
-    <b>Cisco Networking Basics</b><br/>
-  </p>
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
+          <img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="90" alt="Cisco Networking Basics"></br>
+          <b>Cisco Networking Basics</b><br/></br>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
+          <img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="90" alt = "Cisco Networking Devices and Initial Configuration"></br>
+          <b>Cisco Networking Devices &</br> Initial Configuration</b><br/>
+        </a>
+      </td>
+    </tr>
+  </table>
 </div>
 
 ---
