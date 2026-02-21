@@ -48,6 +48,18 @@
           <b>Cisco Networking Devices &</br> Initial Configuration</b><br/>
         </a>
       </td>
+      <td align="center">
+        <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
+          <img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="90" alt = "Cisco Networking Devices and Initial Configuration"></br>
+          <b>Cisco Network Addressing &</br> Basic Troubleshooting</b><br/>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
+          <img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="90" alt = "Network Support and Security"></br>
+          <b>Cisco Network Support & </br>Security</b><br/>
+        </a>
+      </td>
     </tr>
   </table>
 </div>
