@@ -20,13 +20,13 @@
 ### 🛠 Tech Stack & Tools
 
 <div align="center">
-  
+
 | Category | Icons | Focus & Expertise |
-| -------- | ----- | ----------------- |
-| **Virtualization** | <img src="https://cdn.simpleicons.org/vmware/607078" height="35" /> <img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="35" /> | **Cisco Modeling Labs (CML), VMware Workstation** |
-| **Operating Systems** | <img src="https://skillicons.dev/icons?i=linux,kali,windows,ubuntu" height="35" /> | **Security testing on Kali, Server management on Ubuntu**|
-| **Analysis** | <img src="https://cdn.simpleicons.org/wireshark/1679A7" height="35" />   <img src="https://skillicons.dev/icons?i=bash" height="35" alt="Tcpdump/CLI Tools" style="vertical-align: middle; margin-left: 15px;" title="CLI Analysis (Tcpdump)" /> | **Packet Analysis, Network Scanning & Vulnerability Audit** |
-| **Learning** | <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="35" /> | **NetDevOps Theory: Infrastructure as Code & Scripting**|
+| --- | --- | --- |
+| **Virtualization** | <img src="https://cdn.simpleicons.org/vmware/607078" height="30" />&nbsp;<img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="30" /> | **CML, VMware Workstation** |
+| **Operating Systems** | <img src="https://skillicons.dev/icons?i=linux,kali,windows,ubuntu" height="30" /> | **Security testing & Server management** |
+| **Analysis** | <img src="https://cdn.simpleicons.org/wireshark/1679A7" height="30" />&nbsp;&nbsp;<img src="https://skillicons.dev/icons?i=bash" height="30" /> | **Packet Analysis & Vulnerability Audit** |
+| **Learning** | <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="30" /> | **NetDevOps & Infrastructure as Code** |
 
 </div>
 
@@ -34,30 +34,32 @@
 
 <div align="center">
   <h3>📜 Certifications</h3>
-  <table>
+  <table border="0">
     <tr>
-      <td align="center">
+      <td align="center" width="50%" valign="top">
         <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-          <img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="90" alt="Cisco Networking Basics"></br>
-          <b>Cisco Networking Basics</b><br/></br>
+          <img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="90" /><br/>
+          <b>Networking Basics</b>
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="50%" valign="top">
         <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
-          <img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="90" alt = "Cisco Networking Devices and Initial Configuration"></br>
-          <b>Cisco Networking Devices &</br> Initial Configuration</b><br/>
+          <img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="90" /><br/>
+          <b>Networking Devices <br/>Initial Configuration</b>
         </a>
       </td>
-      <td align="center">
+    </tr>
+    <tr>
+      <td align="center" width="50%" valign="top">
         <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
-          <img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="90" alt = "Cisco Networking Devices and Initial Configuration"></br>
-          <b>Cisco Network Addressing &</br> Basic Troubleshooting</b><br/>
+          <img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="90" /><br/>
+          <b>Network Addressing Troubleshooting</b>
         </a>
       </td>
-      <td align="center">
+      <td align="center" width="50%" valign="top">
         <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
-          <img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="90" alt = "Network Support and Security"></br>
-          <b>Cisco Network Support & </br>Security</b><br/>
+          <img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="90" /><br/>
+          <b>Network Support &<br/>Security</b>
         </a>
       </td>
     </tr>
