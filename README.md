@@ -21,12 +21,12 @@
 
 <div align="center">
 
-| Category | Icons | Focus & Expertise |
-| --- | --- | --- |
-| **Virtualization** | <img src="https://cdn.simpleicons.org/vmware/607078" height="30" />&nbsp;<img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="30" /> | **CML, VMware Workstation** |
-| **Operating Systems** | <img src="https://skillicons.dev/icons?i=linux,kali,windows,ubuntu" height="30" /> | **Security testing & Server management** |
-| **Analysis** | <img src="https://cdn.simpleicons.org/wireshark/1679A7" height="30" />&nbsp;&nbsp;<img src="https://skillicons.dev/icons?i=bash" height="30" /> | **Packet Analysis & Vulnerability Audit** |
-| **Learning** | <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="30" /> | **NetDevOps & Infrastructure as Code** |
+| Category | Icons | 
+| --- | --- |
+| **Virtualization** | <img src="https://cdn.simpleicons.org/vmware/607078" height="40" />&nbsp;<img src="https://cdn.simpleicons.org/cisco/1BA0D7" height="40" />|
+| **Operating Systems** | <img src="https://skillicons.dev/icons?i=linux,kali,windows,ubuntu" height="40" /> | 
+| **Analysis** | <img src="https://cdn.simpleicons.org/wireshark/1679A7" height="40" />&nbsp;&nbsp;<img src="https://skillicons.dev/icons?i=bash" height="40" alt="Tcpdump/CLI Tools" style="vertical-align: middle; margin-left: 15px;" title="CLI Analysis (Tcpdump)" /> |
+| **Learning** | <img src="https://skillicons.dev/icons?i=ansible,terraform,python" height="40" /> | 
 
 </div>
 
