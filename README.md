@@ -1,7 +1,8 @@
 <div align="center">
   
-  ### 🎯 <b>Current Target: Cisco Certified Network Associate (CCNA 200-301)
-  ### 📅 <b>Exam Scheduled: March 19, 2026</b></p>
+  # 🏆 **CERTIFIED: Cisco Certified Network Associate (CCNA 200-301)**
+  ### 📅 **Achieved: March 19, 2026**
+  
 </div>
 
 ---
@@ -35,6 +36,14 @@
 <div align="center">
   <h3>📜 Certifications</h3>
   <table border="0">
+    <tr>
+      <td align="center" colspan="2" valign="top">
+         <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
+          <img src="https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png" width="120" /><br/>
+          <b>CCNA - Cisco Certified Network Associate</b>
+        </a>
+      </td>
+    </tr>
     <tr>
       <td align="center" width="50%" valign="top">
         <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
