@@ -59,7 +59,28 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <div align="center">
 
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="85%" alt="Grafana telemetry dashboard demo" />
+<table border="0">
+  <tr>
+    <td align="center" width="50%">
+      <b>Devices Observability (Switch/Router)</b><br/><br/>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Grafana telemetry dashboard demo" />
+    </td>
+    <td align="center" width="50%">
+      <b>Server Observability</b><br/><br/>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Layer 2 observability dashboard demo" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="50%">
+      <b>MIMIR Control Plane</b><br/><br/>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/mimir-admin-demo.gif?raw=true" width="100%" alt="MIMIR network administration demo" />
+    </td>
+    <td align="center" width="50%">
+      <b>ARGUS Security Auditor</b><br/><br/>
+      <sub><i>Updated later.</i></sub>
+    </td>
+  </tr>
+</table>
 
 </div>
 
@@ -143,6 +164,28 @@ flowchart LR
 <p>
   <kbd><img src="https://skillicons.dev/icons?i=github" width="40" height="40" alt="GitHub" title="GitHub" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=vscode" width="40" height="40" alt="VS Code" title="VS Code" /></kbd>
+</p>
+
+</div>
+
+---
+
+<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
+<!-- ║                         AI MAIN TOOLS                             ║ -->
+<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
+
+## 🧠 AI Main Tools
+
+<div align="center">
+
+<p>
+  <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd>
+</p>
+
+<p>
+  <img src="https://img.shields.io/badge/Codex-412991?style=for-the-badge&logo=openai&logoColor=white" alt="Codex" />
+  <img src="https://img.shields.io/badge/ChatGPT-10A37F?style=for-the-badge&logo=openai&logoColor=white" alt="ChatGPT" />
 </p>
 
 </div>
