@@ -59,7 +59,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <div align="center">
 
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-2x.webp?raw=true" width="85%" alt="Grafana telemetry dashboard demo" />
+<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="85%" alt="Grafana telemetry dashboard demo" />
 
 </div>
 
