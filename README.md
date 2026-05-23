@@ -62,11 +62,11 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <table border="0">
   <tr>
     <td align="center" width="50%">
-      <b>Devices Observability (Switch/Router)</b><br/><br/>
+      <b>Telemetry Pipeline</b><br/><br/>
       <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Grafana telemetry dashboard demo" />
     </td>
     <td align="center" width="50%">
-      <b>Server Observability</b><br/><br/>
+      <b>Layer 2 Observability</b><br/><br/>
       <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Layer 2 observability dashboard demo" />
     </td>
   </tr>
@@ -178,15 +178,22 @@ flowchart LR
 
 <div align="center">
 
-<p>
-  <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd>
-</p>
-
-<p>
-  <img src="https://img.shields.io/badge/Codex-412991?style=for-the-badge&logo=openai&logoColor=white" alt="Codex" />
-  <img src="https://img.shields.io/badge/ChatGPT-10A37F?style=for-the-badge&logo=openai&logoColor=white" alt="ChatGPT" />
-</p>
+<table border="0">
+  <tr>
+    <td align="center" width="120">
+      <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd><br/>
+      <sub><b>Claude</b></sub>
+    </td>
+    <td align="center" width="120">
+      <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd><br/>
+      <sub><b>Gemini</b></sub>
+    </td>
+    <td align="center" width="160">
+      <kbd><img src="https://cdn.simpleicons.org/openaigym/000000" width="40" height="40" alt="ChatGPT / Codex" title="ChatGPT / Codex" /></kbd><br/>
+      <sub><b>ChatGPT&nbsp;/&nbsp;Codex</b></sub>
+    </td>
+  </tr>
+</table>
 
 </div>
 
