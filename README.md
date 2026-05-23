@@ -167,6 +167,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
   <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/openaigym/000000" width="40" height="40" alt="ChatGPT / Codex" title="ChatGPT / Codex" /></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/perplexity/000000" width="40" height="40" alt="Perplexity" title="Perplexity" /></kbd>
 </p>
 
 </div>
