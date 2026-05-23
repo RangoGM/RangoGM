@@ -62,11 +62,11 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <table border="0">
   <tr>
     <td align="center" width="50%">
-      <b>Devices Observability</b><br/><br/>
+      <b>Telemetry Pipeline</b><br/><br/>
       <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Grafana telemetry dashboard demo" />
     </td>
     <td align="center" width="50%">
-      <b>Server Observability</b><br/><br/>
+      <b>Layer 2 Observability</b><br/><br/>
       <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Layer 2 observability dashboard demo" />
     </td>
   </tr>
@@ -77,12 +77,13 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
     </td>
     <td align="center" width="50%">
       <b>ARGUS Security Auditor</b><br/><br/>
-      <sub><i>Updated later.</i></sub>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/argus-security-auditor.gif?raw=true" width="100%" alt="ARGUS security auditor demo" />
     </td>
   </tr>
 </table>
 
 </div>
+
 
 ---
 
