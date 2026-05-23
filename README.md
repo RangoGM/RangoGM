@@ -94,27 +94,9 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 ### 🗺️ Lab Topology
 
-```mermaid
-flowchart LR
-    K["🔴 Kali Linux<br/>Attacker"] -->|L2 attacks| SW
-    W["🪟 Windows<br/>Victim"] -->|client traffic| SW
-    SW["🔷 Cisco Catalyst 2960<br/>(physical L2 switch)"] -->|inter-VLAN| R["🌐 Cisco 2811<br/>Router"]
-    SW -->|services + telemetry| UB["🐧 Ubuntu Server<br/>FreeRADIUS · rsyslog<br/>Grafana · Loki · Prometheus · Ollama"]
-
-    UB -. syslog .-> LK["📜 Loki"]
-    UB -. SNMP .-> PR["📈 Prometheus"]
-    UB -. AI .-> OL["🦙 Ollama / Llama 3"]
-    LK & PR --> GF["📊 Grafana Dashboards"]
-
-    classDef attacker fill:#3a1212,stroke:#ff4d4d,color:#fff;
-    classDef victim fill:#1a2a4a,stroke:#7aa2f7,color:#fff;
-    classDef net fill:#0f3a4a,stroke:#1BA0D7,color:#fff;
-    classDef obs fill:#2a1a3a,stroke:#bb86fc,color:#fff;
-    class K attacker;
-    class W victim;
-    class SW,R net;
-    class UB,LK,PR,OL,GF obs;
-```
+<div align="center">
+<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/lab-topology.svg?raw=true" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
+</div>
 
 ---
 
