@@ -63,12 +63,13 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <table border="0">
   <tr>
     <td align="center" width="50%">
-      <b>Telemetry Pipeline</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Grafana telemetry dashboard demo" />
+      <b>Devices Observability</b><br/>
+      <sub><i>Legacy hardware in modern observability</i></sub><br/><br/>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Legacy hardware devices observability dashboard demo" />
     </td>
     <td align="center" width="50%">
-      <b>Layer 2 Observability</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Layer 2 observability dashboard demo" />
+      <b>Server Observability</b><br/><br/>
+      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Server observability dashboard demo" />
     </td>
   </tr>
   <tr>
