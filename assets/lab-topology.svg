@@ -1,0 +1,138 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 420" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <defs>
+    <linearGradient id="tAttacker" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ff4d4d" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#3a1212"/>
+    </linearGradient>
+    <linearGradient id="tVictim" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7aa2f7" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1a2a4a"/>
+    </linearGradient>
+    <linearGradient id="tNet" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1BA0D7" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#0f3a4a"/>
+    </linearGradient>
+    <linearGradient id="tObs" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bb86fc" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#2a1a3a"/>
+    </linearGradient>
+    <marker id="aRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#ff4d4d" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="aBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#7aa2f7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="aCyan" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#1BA0D7" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+    <marker id="aPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M2 1L8 5L2 9" fill="none" stroke="#bb86fc" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <text x="600" y="32" text-anchor="middle" fill="#c9d1d9" font-size="22" font-weight="700" letter-spacing="3">LAB TOPOLOGY</text>
+
+  <rect x="20" y="75" width="220" height="265" rx="14" fill="none" stroke="#3d4046" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="130" y="94" text-anchor="middle" fill="#7d8590" font-size="11" font-weight="600" letter-spacing="2">THREAT LAB</text>
+
+  <rect x="270" y="75" width="240" height="265" rx="14" fill="none" stroke="#3d4046" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="390" y="94" text-anchor="middle" fill="#7d8590" font-size="11" font-weight="600" letter-spacing="2">NETWORK CORE</text>
+
+  <rect x="540" y="75" width="640" height="330" rx="14" fill="none" stroke="#3d4046" stroke-width="1" stroke-dasharray="6 4"/>
+  <text x="860" y="94" text-anchor="middle" fill="#7d8590" font-size="11" font-weight="600" letter-spacing="2">OBSERVABILITY STACK</text>
+
+  <g>
+    <rect x="40" y="125" width="180" height="70" rx="12" fill="url(#tAttacker)" stroke="#ff4d4d" stroke-width="2"/>
+    <text x="130" y="158" text-anchor="middle" fill="#ffffff" font-size="24">💀</text>
+    <text x="130" y="183" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Kali Linux</text>
+  </g>
+
+  <g>
+    <rect x="40" y="240" width="180" height="70" rx="12" fill="url(#tVictim)" stroke="#7aa2f7" stroke-width="2"/>
+    <text x="130" y="273" text-anchor="middle" fill="#ffffff" font-size="22">🪟</text>
+    <text x="130" y="298" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Windows</text>
+  </g>
+
+  <g>
+    <rect x="290" y="125" width="200" height="70" rx="12" fill="url(#tNet)" stroke="#1BA0D7" stroke-width="2"/>
+    <text x="390" y="158" text-anchor="middle" fill="#ffffff" font-size="22">🔷</text>
+    <text x="390" y="183" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Catalyst 2960</text>
+  </g>
+
+  <g>
+    <rect x="290" y="240" width="200" height="70" rx="12" fill="url(#tNet)" stroke="#1BA0D7" stroke-width="2"/>
+    <text x="390" y="273" text-anchor="middle" fill="#ffffff" font-size="22">🌐</text>
+    <text x="390" y="298" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Cisco 2811</text>
+  </g>
+
+  <g>
+    <rect x="560" y="125" width="600" height="75" rx="12" fill="url(#tObs)" stroke="#bb86fc" stroke-width="2"/>
+    <text x="860" y="155" text-anchor="middle" fill="#ffffff" font-size="22">🐧</text>
+    <text x="860" y="176" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Ubuntu Server</text>
+    <text x="860" y="192" text-anchor="middle" fill="#ffffff" font-size="11" opacity="0.85">FreeRADIUS · rsyslog · Netmiko · OpenVPN</text>
+  </g>
+
+  <g>
+    <rect x="575" y="235" width="180" height="60" rx="10" fill="url(#tObs)" stroke="#bb86fc" stroke-width="1.5"/>
+    <text x="665" y="262" text-anchor="middle" fill="#ffffff" font-size="20">📜</text>
+    <text x="665" y="284" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="600">Loki · Logs</text>
+  </g>
+
+  <g>
+    <rect x="770" y="235" width="180" height="60" rx="10" fill="url(#tObs)" stroke="#bb86fc" stroke-width="1.5"/>
+    <text x="860" y="262" text-anchor="middle" fill="#ffffff" font-size="20">📈</text>
+    <text x="860" y="284" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="600">Prometheus · Metrics</text>
+  </g>
+
+  <g>
+    <rect x="965" y="235" width="180" height="60" rx="10" fill="url(#tObs)" stroke="#bb86fc" stroke-width="1.5"/>
+    <text x="1055" y="262" text-anchor="middle" fill="#ffffff" font-size="20">🦙</text>
+    <text x="1055" y="284" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="600">Ollama · Llama 3</text>
+  </g>
+
+  <g>
+    <rect x="625" y="335" width="270" height="55" rx="12" fill="url(#tObs)" stroke="#bb86fc" stroke-width="2.5"/>
+    <text x="760" y="360" text-anchor="middle" fill="#ffffff" font-size="20">📊</text>
+    <text x="760" y="380" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="700">Grafana Dashboards</text>
+  </g>
+
+  <line x1="220" y1="160" x2="285" y2="160" stroke="#ff4d4d" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#aRed)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1s" repeatCount="indefinite"/>
+  </line>
+  <text x="252" y="152" text-anchor="middle" fill="#ff6b6b" font-size="10" font-weight="700">L2 attacks</text>
+
+  <path d="M 220 275 C 252 275 248 178 285 178" fill="none" stroke="#7aa2f7" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#aBlue)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.2s" repeatCount="indefinite"/>
+  </path>
+  <text x="246" y="230" text-anchor="middle" fill="#7aa2f7" font-size="10" font-weight="600">traffic</text>
+
+  <line x1="390" y1="195" x2="390" y2="238" stroke="#1BA0D7" stroke-width="2" marker-end="url(#aCyan)"/>
+
+  <line x1="490" y1="160" x2="557" y2="160" stroke="#1BA0D7" stroke-width="2" stroke-dasharray="8 4" marker-end="url(#aCyan)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-24" dur="1.4s" repeatCount="indefinite"/>
+  </line>
+  <text x="523" y="152" text-anchor="middle" fill="#1BA0D7" font-size="10" font-weight="700">telemetry</text>
+
+  <line x1="665" y1="200" x2="665" y2="233" stroke="#bb86fc" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#aPurple)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.6s" repeatCount="indefinite"/>
+  </line>
+  <text x="691" y="220" text-anchor="start" fill="#bb86fc" font-size="9" font-weight="600">syslog</text>
+
+  <line x1="860" y1="200" x2="860" y2="233" stroke="#bb86fc" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#aPurple)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.6s" repeatCount="indefinite"/>
+  </line>
+  <text x="886" y="220" text-anchor="start" fill="#bb86fc" font-size="9" font-weight="600">SNMP</text>
+
+  <line x1="1055" y1="200" x2="1055" y2="233" stroke="#bb86fc" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#aPurple)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.6s" repeatCount="indefinite"/>
+  </line>
+  <text x="1081" y="220" text-anchor="start" fill="#bb86fc" font-size="9" font-weight="600">AI</text>
+
+  <line x1="665" y1="295" x2="665" y2="333" stroke="#bb86fc" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#aPurple)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.5s" repeatCount="indefinite"/>
+  </line>
+
+  <line x1="860" y1="295" x2="860" y2="333" stroke="#bb86fc" stroke-width="2" stroke-dasharray="6 3" marker-end="url(#aPurple)">
+    <animate attributeName="stroke-dashoffset" from="0" to="-18" dur="1.5s" repeatCount="indefinite"/>
+  </line>
+</svg>
