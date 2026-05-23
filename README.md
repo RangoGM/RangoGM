@@ -181,44 +181,26 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 ### 📜 Certifications
 
-<table border="0">
-  <tr>
-    <td align="center" colspan="2" valign="top">
-      <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
-        <img src="https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png" width="120" alt="CCNA" /><br/>
-        <b>CCNA — Cisco Certified Network Associate</b>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%" valign="top">
-      <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-        <img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="90" alt="Networking Basics" /><br/>
-        <b>Networking Basics</b>
-      </a>
-    </td>
-    <td align="center" width="50%" valign="top">
-      <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
-        <img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="90" alt="Networking Devices Initial Configuration" /><br/>
-        <b>Networking Devices<br/>Initial Configuration</b>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%" valign="top">
-      <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
-        <img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="90" alt="Network Addressing Troubleshooting" /><br/>
-        <b>Network Addressing<br/>Troubleshooting</b>
-      </a>
-    </td>
-    <td align="center" width="50%" valign="top">
-      <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
-        <img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="90" alt="Network Support and Security" /><br/>
-        <b>Network Support<br/>&amp; Security</b>
-      </a>
-    </td>
-  </tr>
-</table>
+<p>
+  <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
+    <kbd><img src="https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png" width="64" height="64" alt="CCNA" title="CCNA — Cisco Certified Network Associate" /></kbd>
+  </a>
+</p>
+
+<p>
+  <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
+    <kbd><img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="52" height="52" alt="Networking Basics" title="Networking Basics" /></kbd>
+  </a>
+  <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
+    <kbd><img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="52" height="52" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" /></kbd>
+  </a>
+  <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
+    <kbd><img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="52" height="52" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" /></kbd>
+  </a>
+  <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
+    <kbd><img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="52" height="52" alt="Network Support and Security" title="Network Support and Security" /></kbd>
+  </a>
+</p>
 
 </div>
 
@@ -245,34 +227,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <div align="center">
 
-<table border="0">
-  <tr>
-    <td colspan="2" align="center">
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/profile-details?username=RangoGM&theme=github_dark" width="100%" alt="GitHub Profile Summary" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/repos-per-language?username=RangoGM&theme=github_dark" width="100%" alt="Repos per Language" />
-    </td>
-    <td align="center" width="50%">
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/most-commit-language?username=RangoGM&theme=github_dark" width="100%" alt="Most Commit Language" />
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="50%">
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/stats?username=RangoGM&theme=github_dark" width="100%" alt="GitHub Stats" />
-    </td>
-    <td align="center" width="50%">
-      <img src="https://github-profile-summary-cards.vercel.app/api/cards/productive-time?username=RangoGM&theme=github_dark&utcOffset=7" width="100%" alt="Productive Time" />
-    </td>
-  </tr>
-  <tr>
-    <td colspan="2" align="center">
-      <img src="https://github-readme-activity-graph.vercel.app/graph?username=RangoGM&theme=tokyo-night&bg_color=0D1117&color=1BA0D7&line=1BA0D7&point=ffffff&hide_border=true&area=true" width="100%" alt="Activity Graph" />
-    </td>
-  </tr>
-</table>
+<img src="https://github-readme-activity-graph.vercel.app/graph?username=RangoGM&theme=tokyo-night&bg_color=0D1117&color=1BA0D7&line=1BA0D7&point=ffffff&hide_border=true&area=true" width="100%" alt="GitHub Activity Graph" />
 
 </div>
 
