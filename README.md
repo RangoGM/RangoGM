@@ -95,9 +95,27 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 ### 🗺️ Lab Topology
 
-<div align="center">
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/lab-topology.svg?raw=true" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
-</div>
+```mermaid
+flowchart LR
+    K["🔴 Kali Linux<br/>Attacker"] -->|L2 attacks| SW
+    W["🪟 Windows<br/>Victim"] -->|client traffic| SW
+    SW["🔷 Cisco Catalyst 2960<br/>(physical L2 switch)"] -->|inter-VLAN| R["🌐 Cisco 2811<br/>Router"]
+    SW -->|services + telemetry| UB["🐧 Ubuntu Server<br/>FreeRADIUS · rsyslog<br/>Grafana · Loki · Prometheus · Ollama"]
+
+    UB -. syslog .-> LK["📜 Loki"]
+    UB -. SNMP .-> PR["📈 Prometheus"]
+    UB -. AI .-> OL["🦙 Ollama / Llama 3"]
+    LK & PR --> GF["📊 Grafana Dashboards"]
+
+    classDef attacker fill:#3a1212,stroke:#ff4d4d,color:#fff;
+    classDef victim fill:#1a2a4a,stroke:#7aa2f7,color:#fff;
+    classDef net fill:#0f3a4a,stroke:#1BA0D7,color:#fff;
+    classDef obs fill:#2a1a3a,stroke:#bb86fc,color:#fff;
+    class K attacker;
+    class W victim;
+    class SW,R net;
+    class UB,LK,PR,OL,GF obs;
+```
 
 ---
 
@@ -165,9 +183,10 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <p>
   <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/openaigym/000000" width="40" height="40" alt="ChatGPT / Codex" title="ChatGPT / Codex" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/perplexity/000000" width="40" height="40" alt="Perplexity" title="Perplexity" /></kbd>
+  <kbd><picture title="Gemini"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/gemini-color.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/gemini-color.png" width="40" height="40" alt="Gemini" title="Gemini" /></picture></kbd>
+  <kbd><picture title="ChatGPT"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/openai.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/openai.png" width="40" height="40" alt="ChatGPT" title="ChatGPT" /></picture></kbd>
+  <kbd><picture title="Codex"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/codex-color.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/codex-color.png" width="40" height="40" alt="Codex" title="Codex" /></picture></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/perplexity/1FB8CD" width="40" height="40" alt="Perplexity" title="Perplexity" /></kbd>
 </p>
 
 </div>
