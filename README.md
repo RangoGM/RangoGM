@@ -27,9 +27,10 @@
 
 <div align="center">
 
-# 🏆 Cisco Certified Network Associate (CCNA 200-301)
-
-### 📅 Achieved · March 19, 2026
+<p>
+  <strong>🏆 Cisco Certified Network Associate (CCNA 200-301)</strong><br/>
+  <sub><strong>📅 Achieved · March 19, 2026</strong></sub>
+</p>
 
 </div>
 
@@ -39,7 +40,7 @@
 <!-- ║                            ABOUT ME                               ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🚀 About Me
+### 🚀 About Me
 
 I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused on securing infrastructure and understanding real-world protocol behavior. I continuously build lab environments to **simulate attacks, validate configurations, and strengthen defensive network design**.
 
@@ -55,7 +56,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <!-- ║                          NOW BUILDING                             ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🔬 Now Building
+### 🔬 Now Building
 
 <div align="center">
 
@@ -91,7 +92,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <!-- ║                         LAB TOPOLOGY                              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🗺️ Lab Topology
+### 🗺️ Lab Topology
 
 ```mermaid
 flowchart LR
@@ -121,7 +122,7 @@ flowchart LR
 <!-- ║                     RESEARCH & PUBLICATIONS                       ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 📚 Research & Publications
+### 📚 Research & Publications
 
 <sub><i>Updated later.</i></sub>
 
@@ -131,7 +132,7 @@ flowchart LR
 <!-- ║                           TECH STACK                              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🛠️ Tech Stack & Tools
+### 🛠️ Tech Stack & Tools
 
 <div align="center">
 
@@ -175,26 +176,15 @@ flowchart LR
 <!-- ║                         AI MAIN TOOLS                             ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🧠 AI Main Tools
+### 🧠 AI Main Tools
 
 <div align="center">
 
-<table border="0">
-  <tr>
-    <td align="center" width="120">
-      <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd><br/>
-      <sub><b>Claude</b></sub>
-    </td>
-    <td align="center" width="120">
-      <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd><br/>
-      <sub><b>Gemini</b></sub>
-    </td>
-    <td align="center" width="160">
-      <kbd><img src="https://cdn.simpleicons.org/openaigym/000000" width="40" height="40" alt="ChatGPT / Codex" title="ChatGPT / Codex" /></kbd><br/>
-      <sub><b>ChatGPT&nbsp;/&nbsp;Codex</b></sub>
-    </td>
-  </tr>
-</table>
+<p>
+  <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/googlegemini/8E75B2" width="40" height="40" alt="Gemini" title="Gemini" /></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/openaigym/000000" width="40" height="40" alt="ChatGPT / Codex" title="ChatGPT / Codex" /></kbd>
+</p>
 
 </div>
 
@@ -206,7 +196,7 @@ flowchart LR
 
 <div align="center">
 
-## 📜 Certifications
+### 📜 Certifications
 
 <table border="0">
   <tr>
@@ -255,7 +245,7 @@ flowchart LR
 <!-- ║                     CERTIFICATION ROADMAP                         ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 🎯 Certification Roadmap
+### 🎯 Certification Roadmap
 
 <div align="center">
 <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/certification-roadmap.svg?raw=true" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA, Security+, LPIC-1, CKA planned · CKS as North Star" />
@@ -268,7 +258,7 @@ flowchart LR
 <!-- ║                         GITHUB STATS                              ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 📊 GitHub Activity
+### 📊 GitHub Activity
 
 <div align="center">
 
@@ -309,7 +299,7 @@ flowchart LR
 <!-- ║                            CONNECT                                ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-## 📍 Current Base & Connect
+### 📍 Current Base & Connect
 
 <div align="center">
 
