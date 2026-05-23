@@ -256,41 +256,9 @@ flowchart LR
 
 ## 🎯 Certification Roadmap
 
-```mermaid
-flowchart LR
-    A["✅ CCNA<br/><b>Earned</b>"]:::done
-    B["📚 AWS SAA"]:::planned
-    C["📚 Security+"]:::planned
-    D["📚 LPIC-1"]:::planned
-    E["📚 CKA"]:::planned
-    F["⭐ CKS<br/><b>North Star</b>"]:::star
-
-    A --> B --> C --> D --> E --> F
-
-    classDef done    fill:#0d3320,stroke:#28a745,color:#ffffff,stroke-width:2px
-    classDef planned fill:#0f2a4a,stroke:#1BA0D7,color:#ffffff,stroke-width:2px
-    classDef star    fill:#3a1f5c,stroke:#bb86fc,color:#ffffff,stroke-width:3px
-```
-
 <div align="center">
-
-<table>
-  <tr>
-    <td>🟢 <b>Earned</b></td>
-    <td>CCNA — Cisco networking foundation</td>
-  </tr>
-  <tr>
-    <td>📚 <b>Planned</b></td>
-    <td>Cloud · Security baseline · Linux · Kubernetes admin</td>
-  </tr>
-  <tr>
-    <td>⭐ <b>North Star</b></td>
-    <td>CKS — capstone for the DevSecOps path</td>
-  </tr>
-</table>
-
-<sub><i>Sequence reflects intended order, not committed dates.</i></sub>
-
+<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/certification-roadmap.svg?raw=true" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA, Security+, LPIC-1, CKA planned · CKS as North Star" />
+<sub>📖 Currently focused on <b>AWS SAA</b> · Sequence reflects intended order, not committed dates.</sub>
 </div>
 
 ---
