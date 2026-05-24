@@ -120,35 +120,36 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <div align="center">
 
 <p>
-  <kbd><img src="https://cdn.simpleicons.org/cisco/1BA0D7" width="40" height="40" alt="Cisco" title="Cisco IOS" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/wireshark/1679A7" width="40" height="40" alt="Wireshark" title="Wireshark" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=kali" width="40" height="40" alt="Kali Linux" title="Kali Linux" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/openvpn/EA7E20" width="40" height="40" alt="OpenVPN" title="OpenVPN" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/grafana/F46800" width="40" height="40" alt="Grafana" title="Grafana" /></kbd>
+  <kbd><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/loki.svg" width="40" height="40" alt="Grafana Loki" title="Grafana Loki" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/prometheus/E6522C" width="40" height="40" alt="Prometheus" title="Prometheus" /></kbd>
 </p>
 
 <p>
   <kbd><img src="https://skillicons.dev/icons?i=python" width="40" height="40" alt="Python" title="Python" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=bash" width="40" height="40" alt="Bash" title="Bash" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=ansible" width="40" height="40" alt="Ansible" title="Ansible" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=terraform" width="40" height="40" alt="Terraform" title="Terraform" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=docker" width="40" height="40" alt="Docker" title="Docker" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=aws" width="40" height="40" alt="AWS" title="AWS" /></kbd>
+  <kbd><img src="https://cdn.simpleicons.org/cisco/1BA0D7" width="40" height="40" alt="Cisco" title="Cisco IOS" /></kbd>
 </p>
 
 <p>
   <kbd><img src="https://skillicons.dev/icons?i=linux" width="40" height="40" alt="Linux" title="Linux" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=ubuntu" width="40" height="40" alt="Ubuntu" title="Ubuntu" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=windows" width="40" height="40" alt="Windows" title="Windows" /></kbd>
+  <kbd><img src="https://skillicons.dev/icons?i=bash" width="40" height="40" alt="Bash" title="Bash" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/vmware/607078" width="40" height="40" alt="VMware" title="VMware" /></kbd>
   <kbd><img src="https://cdn.simpleicons.org/ollama/000000" width="40" height="40" alt="Ollama" title="Ollama" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=git" width="40" height="40" alt="Git" title="Git" /></kbd>
 </p>
 
 <p>
   <kbd><img src="https://skillicons.dev/icons?i=github" width="40" height="40" alt="GitHub" title="GitHub" /></kbd>
   <kbd><img src="https://skillicons.dev/icons?i=vscode" width="40" height="40" alt="VS Code" title="VS Code" /></kbd>
+  <kbd><img src="https://skillicons.dev/icons?i=git" width="40" height="40" alt="Git" title="Git" /></kbd>
 </p>
 
 </div>
