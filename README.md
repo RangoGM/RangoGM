@@ -65,21 +65,21 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
     <td align="center" width="50%">
       <b>Devices Observability</b><br/>
       <sub><i>Legacy hardware in modern observability</i></sub><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Legacy hardware devices observability dashboard demo" />
+      <img src="./assets/grafana-telemetry-demo.gif" width="100%" alt="Legacy hardware devices observability dashboard demo" />
     </td>
     <td align="center" width="50%">
       <b>Server Observability</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Server observability dashboard demo" />
+      <img src="./assets/grafana-telemetry-demo-02.gif" width="100%" alt="Server observability dashboard demo" />
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
       <b>MIMIR Control Plane</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/mimir-admin-demo.gif?raw=true" width="100%" alt="MIMIR network administration demo" />
+      <img src="./assets/mimir-admin-demo.gif" width="100%" alt="MIMIR network administration demo" />
     </td>
     <td align="center" width="50%">
       <b>ARGUS Security Auditor</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/argus-security-auditor.gif?raw=true" width="100%" alt="ARGUS security auditor demo" />
+      <img src="./assets/argus-security-auditor.gif" width="100%" alt="ARGUS security auditor demo" />
     </td>
   </tr>
 </table>
@@ -96,7 +96,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🗺️ Lab Topology
 
 <div align="center">
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/lab-topology.svg?raw=true" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
+<img src="./assets/lab-topology.svg" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
 </div>
 
 ---
@@ -216,7 +216,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🎯 Certification Roadmap
 
 <div align="center">
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/certification-roadmap.svg?raw=true" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · Security+, LPIC-1, CKA planned · CKS as North Star" />
+<img src="./assets/certification-roadmap.svg" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · Security+, LPIC-1, CKA planned · CKS as North Star" />
 <sub>📖 Currently focused on <b>AWS SAA</b> · Sequence reflects intended order, not committed dates.</sub>
 </div>
 
