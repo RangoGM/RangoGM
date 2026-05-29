@@ -186,22 +186,22 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <p>
   <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
-    <kbd><img src="https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png" width="64" height="64" alt="CCNA" title="CCNA — Cisco Certified Network Associate" /></kbd>
+    <img src="./assets/cert-ccna.svg" width="520" alt="CCNA" title="CCNA — Cisco Certified Network Associate" />
   </a>
 </p>
 
 <p>
   <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-    <kbd><img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="52" height="52" alt="Networking Basics" title="Networking Basics" /></kbd>
+    <img src="./assets/cert-networking-basics.svg" width="68" alt="Networking Basics" title="Networking Basics" />
   </a>
   <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="52" height="52" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" /></kbd>
+    <img src="./assets/cert-device-config.svg" width="68" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" />
   </a>
   <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="52" height="52" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" /></kbd>
+    <img src="./assets/cert-addressing-troubleshooting.svg" width="68" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" />
   </a>
   <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="52" height="52" alt="Network Support and Security" title="Network Support and Security" /></kbd>
+    <img src="./assets/cert-support-security.svg" width="68" alt="Network Support and Security" title="Network Support and Security" />
   </a>
 </p>
 
