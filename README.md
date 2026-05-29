@@ -65,21 +65,21 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
     <td align="center" width="50%">
       <b>Devices Observability</b><br/>
       <sub><i>Legacy hardware in modern observability</i></sub><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo.gif?raw=true" width="100%" alt="Legacy hardware devices observability dashboard demo" />
+      <img src="./assets/grafana-telemetry-demo.gif" width="100%" alt="Legacy hardware devices observability dashboard demo" />
     </td>
     <td align="center" width="50%">
       <b>Server Observability</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/grafana-telemetry-demo-02.gif?raw=true" width="100%" alt="Server observability dashboard demo" />
+      <img src="./assets/grafana-telemetry-demo-02.gif" width="100%" alt="Server observability dashboard demo" />
     </td>
   </tr>
   <tr>
     <td align="center" width="50%">
       <b>MIMIR Control Plane</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/mimir-admin-demo.gif?raw=true" width="100%" alt="MIMIR network administration demo" />
+      <img src="./assets/mimir-admin-demo.gif" width="100%" alt="MIMIR network administration demo" />
     </td>
     <td align="center" width="50%">
       <b>ARGUS Security Auditor</b><br/><br/>
-      <img src="https://github.com/RangoGM/RangoGM/blob/main/assets/argus-security-auditor.gif?raw=true" width="100%" alt="ARGUS security auditor demo" />
+      <img src="./assets/argus-security-auditor.gif" width="100%" alt="ARGUS security auditor demo" />
     </td>
   </tr>
 </table>
@@ -96,7 +96,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🗺️ Lab Topology
 
 <div align="center">
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/lab-topology.svg?raw=true" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
+<img src="./assets/lab-topology.svg" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
 </div>
 
 ---
@@ -186,22 +186,22 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 
 <p>
   <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
-    <kbd><img src="https://images.credly.com/images/683783d8-eaac-4c37-a14d-11bd8a36321d/ccna_600.png" width="64" height="64" alt="CCNA" title="CCNA — Cisco Certified Network Associate" /></kbd>
+    <img src="./assets/cert-ccna.svg" width="520" alt="CCNA" title="CCNA — Cisco Certified Network Associate" />
   </a>
 </p>
 
 <p>
   <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-    <kbd><img src="https://images.credly.com/images/5bdd6a39-3e03-4444-9510-ecff80c9ce79/image.png" width="52" height="52" alt="Networking Basics" title="Networking Basics" /></kbd>
+    <img src="./assets/cert-networking-basics.svg" width="68" alt="Networking Basics" title="Networking Basics" />
   </a>
   <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/88316fe8-5651-4e61-a6be-5be1558f049e/image.png" width="52" height="52" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" /></kbd>
+    <img src="./assets/cert-device-config.svg" width="68" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" />
   </a>
   <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/49c099bd-8542-4f48-8c03-f21799dcaf51/image.png" width="52" height="52" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" /></kbd>
+    <img src="./assets/cert-addressing-troubleshooting.svg" width="68" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" />
   </a>
   <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
-    <kbd><img src="https://images.credly.com/size/340x340/images/a4dd891f-7bf5-4938-8241-50dc81e8cc00/image.png" width="52" height="52" alt="Network Support and Security" title="Network Support and Security" /></kbd>
+    <img src="./assets/cert-support-security.svg" width="68" alt="Network Support and Security" title="Network Support and Security" />
   </a>
 </p>
 
@@ -216,7 +216,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🎯 Certification Roadmap
 
 <div align="center">
-<img src="https://github.com/RangoGM/RangoGM/blob/main/assets/certification-roadmap.svg?raw=true" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · Security+, LPIC-1, CKA planned · CKS as North Star" />
+<img src="./assets/certification-roadmap.svg" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · Security+, LPIC-1, CKA planned · CKS as North Star" />
 <sub>📖 Currently focused on <b>AWS SAA</b> · Sequence reflects intended order, not committed dates.</sub>
 </div>
 
