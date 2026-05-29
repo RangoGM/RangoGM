@@ -206,7 +206,7 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🎯 Certification Roadmap
 
 <div align="center">
-<img src="./assets/certification-roadmap.svg" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · Security+, LPIC-1, CKA planned · CKS as North Star" />
+<img src="./assets/certification-roadmap.svg" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · CKA planned · CKS as North Star · Security+ and LPIC-1 as a supplementary" />
 <sub>📖 Currently focused on <b>AWS SAA</b> · Sequence reflects intended order, not committed dates.</sub>
 </div>
 
