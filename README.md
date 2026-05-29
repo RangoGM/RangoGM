@@ -185,24 +185,14 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 📜 Certifications
 
 <p>
-  <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url">
-    <img src="./assets/cert-ccna.svg" width="520" alt="CCNA" title="CCNA — Cisco Certified Network Associate" />
-  </a>
+  <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url"><img src="./assets/cert-ccna.svg" width="520" alt="CCNA" title="CCNA — Cisco Certified Network Associate" /></a>
 </p>
 
 <p>
-  <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url">
-    <img src="./assets/cert-networking-basics.svg" width="68" alt="Networking Basics" title="Networking Basics" />
-  </a>
-  <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url">
-    <img src="./assets/cert-device-config.svg" width="68" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" />
-  </a>
-  <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url">
-    <img src="./assets/cert-addressing-troubleshooting.svg" width="68" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" />
-  </a>
-  <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url">
-    <img src="./assets/cert-support-security.svg" width="68" alt="Network Support and Security" title="Network Support and Security" />
-  </a>
+  <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url"><img src="./assets/cert-networking-basics.svg" width="68" alt="Networking Basics" title="Networking Basics" /></a>&nbsp;&nbsp;
+  <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url"><img src="./assets/cert-device-config.svg" width="68" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" /></a>&nbsp;&nbsp;
+  <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url"><img src="./assets/cert-addressing-troubleshooting.svg" width="68" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" /></a>&nbsp;&nbsp;
+  <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url"><img src="./assets/cert-support-security.svg" width="68" alt="Network Support and Security" title="Network Support and Security" /></a>
 </p>
 
 </div>
