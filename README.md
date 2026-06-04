@@ -96,7 +96,10 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🗺️ Lab Topology
 
 <div align="center">
-<img src="./assets/topology-full.svg" width="100%" alt="Full CCNA and AWS lab topology: secured Cisco switching and routing, Ubuntu observability services, local MIMIR and ARGUS AI operations, VPN connectivity, and AWS DynamoDB, EventBridge, and SNS integration" />
+<a href="./assets/topology-full.svg?raw=1">
+  <img src="./assets/topology-full.svg" width="100%" alt="Full CCNA and AWS lab topology: secured Cisco switching and routing, Ubuntu observability services, local MIMIR and ARGUS AI operations, VPN connectivity, and AWS DynamoDB, EventBridge, and SNS integration" />
+</a>
+<sub><i>Click the topology to open the full-resolution SVG, then use browser zoom to inspect individual paths and services.</i></sub><br/>
 <sub><i>This topology is a living architecture and may expand as future CCNA, AWS, security, and observability components are added.</i></sub>
 </div>
 
