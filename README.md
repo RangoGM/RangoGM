@@ -96,7 +96,8 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 ### 🗺️ Lab Topology
 
 <div align="center">
-<img src="./assets/lab-topology.svg" width="100%" alt="Lab Topology: Threat Lab (Kali, Windows) → Network Core (Catalyst 2960, Cisco 2811) → Observability Stack (Ubuntu Server hosting Loki, Prometheus, Ollama; Grafana dashboards)" />
+<img src="./assets/topology-full.svg" width="100%" alt="Full CCNA and AWS lab topology: secured Cisco switching and routing, Ubuntu observability services, local MIMIR and ARGUS AI operations, VPN connectivity, and AWS DynamoDB, EventBridge, and SNS integration" />
+<sub><i>This topology is a living architecture and may expand as future CCNA, AWS, security, and observability components are added.</i></sub>
 </div>
 
 ---
