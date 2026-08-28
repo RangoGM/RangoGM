@@ -56,68 +56,44 @@ I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused 
 <!-- ║                          NOW BUILDING                             ║ -->
 <!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
-### 🔬 Now Building
+### 🔬 Now Building — CCNA v2.0 Learning Platform
 
 <div align="center">
 
-<table border="0">
+<table>
   <tr>
     <td align="center" width="50%">
-      <b>Devices Observability</b><br/>
-      <sub><i>Legacy hardware in modern observability</i></sub><br/><br/>
-      <img src="./assets/grafana-telemetry-demo.gif" width="100%" alt="Legacy hardware devices observability dashboard demo" />
+      <b>Lesson Preview 1</b><br/><br/>
+      <img src="./assets/rangonetwork-preview-1.gif" width="100%" alt="RangoNetwork Preview 1">
     </td>
     <td align="center" width="50%">
-      <b>Server Observability</b><br/><br/>
-      <img src="./assets/grafana-telemetry-demo-02.gif" width="100%" alt="Server observability dashboard demo" />
+      <b>Lesson Preview 2</b><br/><br/>
+      <img src="./assets/rangonetwork-preview-2.gif" width="100%" alt="RangoNetwork Preview 2">
     </td>
   </tr>
+
   <tr>
     <td align="center" width="50%">
-      <b>MIMIR Control Plane</b><br/><br/>
-      <img src="./assets/mimir-admin-demo.gif" width="100%" alt="MIMIR network administration demo" />
+      <b></b>Interactive CLI on your Browser<br/><br/>
+      <img src="./assets/rangonetwork-preview-3.gif" width="100%" alt="RangoNetwork Preview 3">
     </td>
     <td align="center" width="50%">
-      <b>ARGUS Security Auditor</b><br/><br/>
-      <img src="./assets/argus-security-auditor.gif" width="100%" alt="ARGUS security auditor demo" />
+      <b>Phase Checkpoint Badges + Light Mode</b><br/><br/>
+      <img src="./assets/rangonetwork-preview-4.gif" width="100%" alt="RangoNetwork Preview 4">
     </td>
   </tr>
 </table>
 
+<p>
+  <img src="./assets/rangonetwork-preview-5.gif" width="100%" alt="RangoNetwork Full Preview">
+</p>
+
+<b>Sandbox in development · AWS Cognito login integrated</b>
+
 </div>
 
 
 ---
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                         LAB TOPOLOGY                              ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 🗺️ Lab Topology
-
-<div align="center">
-<a href="https://excalidraw.com/#json=wMfME5ubFknbyoKuEiUdb,GPjr7JHUFORDr5FHancOTQ">
-  <img src="./assets/topology-full.svg" width="100%" alt="Full CCNA and AWS lab topology: secured Cisco switching and routing, Ubuntu observability services, local MIMIR and ARGUS AI operations, VPN connectivity, and AWS DynamoDB, EventBridge, and SNS integration" />
-</a>
-<sub><i>Click the topology to open the interactive Excalidraw canvas and inspect individual paths and services.</i></sub><br/>
-<sub><i>This topology is a living architecture and may expand as future CCNA, AWS, security, and observability components are added.</i></sub>
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                     RESEARCH & PUBLICATIONS                       ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 📚 Research & Publications
-
-<sub><i>Updated later.</i></sub>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                           TECH STACK                              ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
 
 ### 🛠️ Tech Stack & Tools
 
