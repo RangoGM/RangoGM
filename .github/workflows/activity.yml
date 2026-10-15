@@ -1,0 +1,42 @@
+name: Live profile cards
+
+# Redraws the profile's live cards (contribution calendar, profile views and followers) and
+# publishes them to the `output` branch, which README.md loads them from. A push that changes the
+# renderer republishes straight away, on any branch, so a pull request shows the cards it will ship.
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/activity/**'
+      - '.github/workflows/activity.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: activity-graph
+  cancel-in-progress: false
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+
+      - name: Render the live cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/activity/update.mjs dist
+
+      - name: Publish to the output branch
+        run: |
+          activity=$(git hash-object -w dist/activity.svg)
+          stats=$(git hash-object -w dist/stats.svg)
+          tree=$(printf '100644 blob %s\tactivity.svg\n100644 blob %s\tstats.svg\n' "$activity" "$stats" | git mktree)
+          commit=$(git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit-tree "$tree" -m 'Update the live profile cards')
+          git push --force origin "$commit:refs/heads/output"

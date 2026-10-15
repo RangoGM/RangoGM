@@ -1,237 +1,46 @@
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                          HEADER BANNER                            ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-<div align="center">
-
-![Header](https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,40:1BA0D7,100:0F2027&height=220&section=header&text=Rango&fontSize=78&fontColor=ffffff&fontAlignY=36&desc=Network%20Security%20%E2%80%A2%20Observability%20%E2%80%A2%20DevSecOps&descAlignY=58&descSize=18&animation=fadeIn)
-
-<a href="https://github.com/RangoGM">
-  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3200&pause=700&color=1BA0D7&center=true&vCenter=true&width=760&lines=Securing+Layer+2%2C+one+ASIC+at+a+time;Building+AI-driven+network+defense+systems;From+Cisco+CLI+%E2%86%92+Cloud-native+observability;CCNA+%E2%9C%93+%E2%80%A2+AWS+SAA+%E2%9F%B3+%E2%80%A2+LPIC-1+%E2%9F%B3" alt="Typing SVG" />
-</a>
-
-<br/>
-
-<img src="https://komarev.com/ghpvc/?username=RangoGM&label=Profile%20views&color=1BA0D7&style=flat-square" alt="profile views" />
-<img src="https://img.shields.io/github/followers/RangoGM?label=Followers&style=flat-square&color=1BA0D7" alt="followers" />
-<img src="https://img.shields.io/badge/Based%20in-Ho%20Chi%20Minh%20City%20%F0%9F%87%BB%F0%9F%87%B3-1BA0D7?style=flat-square" alt="location" />
-<img src="https://img.shields.io/badge/Open%20to-Research%20%26%20Collab-success?style=flat-square" alt="open" />
-
-</div>
-
-<br/>
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                       CCNA ACHIEVEMENT                            ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-<div align="center">
-
-<p>
-  <strong>🏆 Cisco Certified Network Associate (CCNA 200-301)</strong><br/>
-  <sub><strong>📅 Achieved · March 19, 2026</strong></sub>
+<p align="center">
+  <img src="./assets/hero.svg" width="100%" alt="Dat Tran Gia — Building..." />
 </p>
 
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                            ABOUT ME                               ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 🚀 About Me
-
-I'm a networking and security enthusiast based in **Ho Chi Minh City**, focused on securing infrastructure and understanding real-world protocol behavior. I continuously build lab environments to **simulate attacks, validate configurations, and strengthen defensive network design**.
-
-> 🛡️ **Research Project (NCKH)**  
-> *Layered Security Model for Enterprise Access Networks* — an 8-layer Defense-in-Depth architecture validated on physical Cisco Catalyst 2960, with systematic vulnerability exploitation across each layer.
-
-> 🧠 **Documentation**  
-> Every lab and research finding is documented in my **[Second Brain](https://github.com/RangoGM/ccna-labs)** repository.
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                          NOW BUILDING                             ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 🔬 Now Building — CCNA v2.0 Learning Platform
-
-<div align="center">
-
-<table>
-  <tr>
-    <td align="center" width="50%">
-      <b>Lesson Preview 1</b><br/><br/>
-      <img src="./assets/rangonetwork-preview-1.gif" width="100%" alt="RangoNetwork Preview 1">
-    </td>
-    <td align="center" width="50%">
-      <b>Lesson Preview 2</b><br/><br/>
-      <img src="./assets/rangonetwork-preview-2.gif" width="100%" alt="RangoNetwork Preview 2">
-    </td>
-  </tr>
-
-  <tr>
-    <td align="center" width="50%">
-      <b></b>Interactive CLI on your Browser<br/><br/>
-      <img src="./assets/rangonetwork-preview-3.gif" width="100%" alt="RangoNetwork Preview 3">
-    </td>
-    <td align="center" width="50%">
-      <b>Phase Checkpoint Badges + Light Mode</b><br/><br/>
-      <img src="./assets/rangonetwork-preview-4.gif" width="100%" alt="RangoNetwork Preview 4">
-    </td>
-  </tr>
-</table>
-
-<p>
-  <img src="./assets/rangonetwork-preview-5.gif" width="100%" alt="RangoNetwork Full Preview">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/RangoGM/RangoGM/output/stats.svg" alt="Profile Views and Followers" />
 </p>
 
-<b>Sandbox in development · AWS Cognito login integrated</b>
+### About Me
 
-</div>
+I'm Dat Tran Gia, also known as Rango, a CCNA-certified network engineer in Ho Chi Minh City moving into **DevSecOps**. I started at the switch port with VLANs, STP, OSPF and access-layer security. Now I'm taking the same habits into cloud infrastructure and delivery pipelines: build it, break it on purpose, verify the fix and write it down.
 
+- **[CCNA Labs](https://github.com/RangoGM/ccna-labs)**: 36 labs built in Cisco Packet Tracer and CML, each with a topology, configs, verification steps and a write-up.
+- **RangoNetwork**: A CCNA learning platform I build and run end to end, on AWS and Kubernetes with Terraform, security checks in CI and Grafana monitoring.
+- **Next Up**: AWS Solutions Architect Associate in November 2026, then Kubernetes, from CKA to CKS.
 
----
-
-### 🛠️ Tech Stack & Tools
-
-<div align="center">
-
-<p>
-  <kbd><img src="https://cdn.simpleicons.org/wireshark/1679A7" width="40" height="40" alt="Wireshark" title="Wireshark" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=kali" width="40" height="40" alt="Kali Linux" title="Kali Linux" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/openvpn/EA7E20" width="40" height="40" alt="OpenVPN" title="OpenVPN" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/grafana/F46800" width="40" height="40" alt="Grafana" title="Grafana" /></kbd>
-  <kbd><img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/loki.svg" width="40" height="40" alt="Grafana Loki" title="Grafana Loki" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/prometheus/E6522C" width="40" height="40" alt="Prometheus" title="Prometheus" /></kbd>
+<p align="center">
+  <img src="./assets/now-building.svg" width="100%" alt="Now Building — RangoNetwork, a CCNA v2.0 learning platform built and run on AWS, Kubernetes and Terraform with security checks in CI" />
 </p>
 
-<p>
-  <kbd><img src="https://skillicons.dev/icons?i=python" width="40" height="40" alt="Python" title="Python" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=ansible" width="40" height="40" alt="Ansible" title="Ansible" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=terraform" width="40" height="40" alt="Terraform" title="Terraform" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=docker" width="40" height="40" alt="Docker" title="Docker" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=aws" width="40" height="40" alt="AWS" title="AWS" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/cisco/1BA0D7" width="40" height="40" alt="Cisco" title="Cisco IOS" /></kbd>
+<p align="center">
+  <a href="https://github.com/RangoGM/ccna-labs"><img src="./assets/ccna-labs.svg" width="100%" alt="RangoGM/ccna-labs: 36 CCNA labs in Packet Tracer and Cisco CML" /></a>
 </p>
 
-<p>
-  <kbd><img src="https://skillicons.dev/icons?i=linux" width="40" height="40" alt="Linux" title="Linux" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=ubuntu" width="40" height="40" alt="Ubuntu" title="Ubuntu" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=windows" width="40" height="40" alt="Windows" title="Windows" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=bash" width="40" height="40" alt="Bash" title="Bash" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/vmware/607078" width="40" height="40" alt="VMware" title="VMware" /></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/ollama/000000" width="40" height="40" alt="Ollama" title="Ollama" /></kbd>
+<p align="center">
+  <img src="./assets/tech-stack.svg" width="100%" alt="Tech Stack & Tools: Network & Security, Cloud & DevSecOps, Observability, Scripting & Data, Systems and Workflow" />
 </p>
 
-<p>
-  <kbd><img src="https://skillicons.dev/icons?i=github" width="40" height="40" alt="GitHub" title="GitHub" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=vscode" width="40" height="40" alt="VS Code" title="VS Code" /></kbd>
-  <kbd><img src="https://skillicons.dev/icons?i=git" width="40" height="40" alt="Git" title="Git" /></kbd>
+<p align="center">
+  <img src="./assets/ai-tools.svg" width="100%" alt="AI Main Tools: Claude, ChatGPT and Codex" />
 </p>
 
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                         AI MAIN TOOLS                             ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 🧠 AI Main Tools
-
-<div align="center">
-
-<p>
-  <kbd><img src="https://cdn.simpleicons.org/claude/D97757" width="40" height="40" alt="Claude" title="Claude" /></kbd>
-  <kbd><picture title="Gemini"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/gemini-color.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/gemini-color.png" width="40" height="40" alt="Gemini" title="Gemini" /></picture></kbd>
-  <kbd><picture title="ChatGPT"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/openai.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/openai.png" width="40" height="40" alt="ChatGPT" title="ChatGPT" /></picture></kbd>
-  <kbd><picture title="Codex"><source media="(prefers-color-scheme: dark)" srcset="https://unpkg.com/@lobehub/icons-static-png@latest/dark/codex-color.png" /><img src="https://unpkg.com/@lobehub/icons-static-png@latest/light/codex-color.png" width="40" height="40" alt="Codex" title="Codex" /></picture></kbd>
-  <kbd><img src="https://cdn.simpleicons.org/perplexity/1FB8CD" width="40" height="40" alt="Perplexity" title="Perplexity" /></kbd>
+<p align="center">
+  <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url"><img src="./assets/certifications.svg" width="100%" alt="Certifications: CCNA 200-301 earned 19 March 2026, AWS Solutions Architect Associate preparing for November 2026, CKA planned, CKS as the north star" /></a>
 </p>
 
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                         CERTIFICATIONS                            ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-<div align="center">
-
-### 📜 Certifications
-
-<p>
-  <a href="https://www.credly.com/badges/cf634bce-0207-4719-bbc9-3a3de93f6471/public_url"><img src="./assets/cert-ccna.svg" width="520" alt="CCNA" title="CCNA — Cisco Certified Network Associate" /></a>
+<p align="center">
+  <img src="https://raw.githubusercontent.com/RangoGM/RangoGM/output/activity.svg" width="100%" alt="Contribution Calendar for the last 12 months, updated every 6 hours" />
 </p>
 
-<p>
-  <a href="https://www.credly.com/badges/137b8b59-e112-4f64-818f-68e3a5197eb7/public_url"><img src="./assets/cert-networking-basics.svg" width="68" alt="Networking Basics" title="Networking Basics" /></a>&nbsp;&nbsp;
-  <a href="https://www.credly.com/badges/8cfb68bb-aace-4849-918a-74b4ed1e3052/public_url"><img src="./assets/cert-device-config.svg" width="68" alt="Networking Devices Initial Configuration" title="Networking Devices Initial Configuration" /></a>&nbsp;&nbsp;
-  <a href="https://www.credly.com/badges/ebf156c7-193f-4758-8c67-5c89f9d92c70/public_url"><img src="./assets/cert-addressing-troubleshooting.svg" width="68" alt="Network Addressing Troubleshooting" title="Network Addressing Troubleshooting" /></a>&nbsp;&nbsp;
-  <a href="https://www.credly.com/badges/05a881bd-d6f9-4242-a03f-47245d3cf7f1/public_url"><img src="./assets/cert-support-security.svg" width="68" alt="Network Support and Security" title="Network Support and Security" /></a>
+<p align="center">
+  <img src="./assets/footer.svg" width="100%" alt="Build Labs. Break Things. Document Everything." />
 </p>
 
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                     CERTIFICATION ROADMAP                         ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 🎯 Certification Roadmap
-
-<div align="center">
-<img src="./assets/certification-roadmap.svg" width="100%" alt="Certification Roadmap: CCNA earned · AWS SAA in active learning · CKA planned · CKS as North Star · Security+ and LPIC-1 as a supplementary" />
-<sub>📖 Currently focused on <b>AWS SAA</b> · Sequence reflects intended order, not committed dates.</sub>
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                         GITHUB STATS                              ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 📊 GitHub Activity
-
-<div align="center">
-
-<img src="https://github-readme-activity-graph.vercel.app/graph?username=RangoGM&theme=tokyo-night&bg_color=0D1117&color=1BA0D7&line=1BA0D7&point=ffffff&hide_border=true&area=true" width="100%" alt="GitHub Activity Graph" />
-
-</div>
-
----
-
-<!-- ╔══════════════════════════════════════════════════════════════════╗ -->
-<!-- ║                            CONNECT                                ║ -->
-<!-- ╚══════════════════════════════════════════════════════════════════╝ -->
-
-### 📍 Current Base & Connect
-
-<div align="center">
-
-![Location](https://img.shields.io/badge/Location-Ho_Chi_Minh_City,_Vietnam-EA4335?style=for-the-badge&logo=google-maps&logoColor=white)
-[![Facebook](https://img.shields.io/badge/Facebook-1877F2?style=for-the-badge&logo=facebook&logoColor=white)](https://www.facebook.com/dat.trangia.96)
-[![Discord](https://img.shields.io/badge/Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discordapp.com/users/698729316703404154)
-[![Gmail](https://img.shields.io/badge/Gmail-D14836?style=for-the-badge&logo=gmail&logoColor=white)](mailto:dattrangia13@gmail.com)
-[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/RangoGM)
-
-<br/>
-
-<sub>
-  <i>"Build labs. Break things. Document everything."</i>
-</sub>
-
-</div>
-
-<br/>
-
-<div align="center">
-
-<img src="https://capsule-render.vercel.app/api?type=waving&color=0:0F2027,40:1BA0D7,100:0F2027&height=100&section=footer&animation=fadeIn" width="100%" alt="Footer" />
-
-</div>
+<!-- Counts profile views without showing a badge; the Live profile cards workflow reads the count for the stats badge above. -->
+<img src="https://komarev.com/ghpvc/?username=RangoGM&style=pixel" alt="" />
