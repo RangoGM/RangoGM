@@ -44,6 +44,10 @@ const disc = (cx, cy, r, color, depth = 1.5) => {
     `<circle cx="${r2(cx)}" cy="${r2(cy)}" r="${r - 0.75}" fill="none" stroke="#ffffff" stroke-opacity=".16" stroke-width="1.5"/>`
 }
 const icon = (name, x, y, color, size = 20) => `<g transform="translate(${x} ${y}) scale(${size / 24})" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${ICONS[name]}</g>`
+// A cartoon hop for the stat discs (as on the profile's other cards): up, a squash on landing,
+// settle, then rest until the next pass 8 s later.
+const HOP = `.hop{transform-box:fill-box;transform-origin:50% 100%;animation:hop 8s infinite}
+@keyframes hop{0%{transform:translateY(0) scale(1,1);animation-timing-function:cubic-bezier(.2,.7,.3,1)}2.5%{transform:translateY(-6px) scale(.96,1.05);animation-timing-function:cubic-bezier(.6,0,.8,.4)}5%{transform:translateY(0) scale(1.07,.93);animation-timing-function:ease-out}6.5%{transform:translateY(0) scale(.98,1.02);animation-timing-function:ease-in-out}8%,100%{transform:translateY(0) scale(1,1)}}`
 
 export function stats(days) {
   let longest = 0, run = 0, best = days[0]
@@ -90,7 +94,7 @@ ${text(W - P, 82, year, { size: 40, w: 900, anchor: 'end', ls: -2.4 })}</g>`)
   const tileW = (W - 2 * P - 3 * 16) / 4
   tiles.forEach(([name, color, face, label, value, unit], i) => {
     const x = P + i * (tileW + 16), y = 116
-    parts.push(`<g class="rise" style="animation-delay:${r2(0.08 + i * 0.07)}s">${duo(x, y, tileW, 80, 14, true)}${disc(x + 29, y + 26, 13, face, 2)}${icon(name, x + 21, y + 18, '#ffffff', 16)}
+    parts.push(`<g class="rise" style="animation-delay:${r2(0.08 + i * 0.07)}s">${duo(x, y, tileW, 80, 14, true)}<g class="hop" style="animation-delay:${r2(2 + i * 0.18)}s">${disc(x + 29, y + 26, 13, face, 2)}${icon(name, x + 21, y + 18, '#ffffff', 16)}</g>
 ${text(x + 52, y + 31, label, { size: 13, w: 800, fill: color })}
 ${text(x + 18, y + 64, value, { size: 26, w: 900 })}${text(x + 26 + tw(value, 26, 900), y + 64, unit, { size: 13, w: 800, fill: Z.muted })}</g>`)
   })
@@ -110,6 +114,8 @@ ${text(x + 18, y + 64, value, { size: 26, w: 900 })}${text(x + 26 + tw(value, 26
     }
   })
   ;[[1, 'M'], [3, 'W'], [5, 'F']].forEach(([row, label]) => parts.push(text(P + 4, y0 + row * step + 11.5, label, { size: 10.5, w: 800, fill: Z.muted })))
+  // the contribution cells, for the light that sweeps across them
+  let lit = ''
   weeks.forEach((week, wi) => {
     // Weeks fade in left to right, a quiet sweep of about a second.
     let col = `<g class="wk" style="animation-delay:${r2(0.3 + wi * 0.02)}s">`
@@ -119,10 +125,16 @@ ${text(x + 18, y + 64, value, { size: 26, w: 900 })}${text(x + 26 + tw(value, 26
       col += lv
         ? `<rect x="${x}" y="${y + 2}" width="${cell}" height="${cell}" rx="4" fill="${lv[2]}"/><rect x="${x + 0.5}" y="${y + 0.5}" width="${cell - 1}" height="${cell - 1}" rx="4" fill="${lv[0]}" stroke="${lv[1]}"/>`
         : `<rect x="${x + 0.5}" y="${y + 0.5}" width="${cell - 1}" height="${cell - 1}" rx="4" fill="none" stroke="#3f3f46" stroke-opacity=".65"/>`
+      if (lv) lit += `<rect x="${x}" y="${y}" width="${cell}" height="${cell}" rx="4"/>`
       if (day.date === today) col += `<rect x="${x - 2.5}" y="${y - 2.5}" width="${cell + 5}" height="${cell + 5}" rx="6" fill="none" stroke="#f4f4f5" stroke-width="1.6" class="today"/>`
     }
     parts.push(col + '</g>')
   })
+  // every 9 s a soft light sweeps left to right over the days with contributions
+  if (lit) {
+    gradients.set('scan', `<linearGradient id="scan" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".32"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>`)
+    parts.push(`<clipPath id="lit">${lit}</clipPath><g clip-path="url(#lit)"><rect x="${cx0 - 180}" y="${y0}" width="180" height="${7 * step}" fill="url(#scan)"><animate attributeName="x" values="${cx0 - 180};${cx0 + gridW};${cx0 + gridW}" keyTimes="0;.5;1" dur="9s" begin="2.4s" repeatCount="indefinite"/></rect></g>`)
+  }
 
   // legend and source line
   const ly = y0 + 7 * step + 30
@@ -139,6 +151,7 @@ ${text(W - P, ly + 11, `${restricted > 0 ? `${restricted} Private Contributions 
 text{text-rendering:geometricPrecision}
 .rise{animation:rise .6s both}.wk{animation:reveal .6s ease-out both}
 .today{animation:breathe 2.4s ease-in-out 2s infinite}
+${HOP}
 @keyframes rise{from{opacity:0;transform:translateY(10px)}}
 @keyframes reveal{from{opacity:0}}
 @keyframes breathe{50%{opacity:.35}}
@@ -178,7 +191,7 @@ export function renderStats({ views = null, followers = null } = {}) {
     // count up from zero over a second, in ten steps; the last step holds
     const counter = Array.from({ length: 10 }, (_, k) => Math.round((p.value * (k + 1)) / 10)).map((v, k) =>
       `<g visibility="hidden"><set attributeName="visibility" to="visible" begin="${r2(0.35 + k * 0.08)}s" ${k === 9 ? 'fill="freeze"' : 'dur="0.08s"'}/>${text(valueX, base, thousands(v), { size: valueSize, w: 900 })}</g>`).join('')
-    const out = `<g class="rise" style="animation-delay:${r2(i * 0.1)}s">${duo(x, pad, p.w, h, h / 2, true)}${disc(x + discX, discY, discR, p.color, depth)}${icon(p.glyph, r2(x + discX - glyph / 2), r2(discY - glyph / 2), '#ffffff', glyph)}
+    const out = `<g class="rise" style="animation-delay:${r2(i * 0.1)}s">${duo(x, pad, p.w, h, h / 2, true)}${disc(x + discX, discY, discR, p.color, depth)}<g class="${p.glyph === 'eye' ? 'blink' : 'nod'}">${icon(p.glyph, r2(x + discX - glyph / 2), r2(discY - glyph / 2), '#ffffff', glyph)}</g>
 ${text(x + labelX, base, p.label, { size: labelSize, w: 800, fill: '#d4d4d8' })}<path d="M${r2(valueX - 7.5)} ${pad + 9}v10" stroke="${Z.border}" stroke-width="1.25" stroke-linecap="round"/>${counter}</g>`
     x += p.w + gap
     return out
@@ -189,6 +202,8 @@ ${text(x + labelX, base, p.label, { size: labelSize, w: 800, fill: '#d4d4d8' })}
 <style>${[800, 900].map(fontFace).join('\n')}
 text{text-rendering:geometricPrecision}
 .rise{animation:rise .6s both}@keyframes rise{from{opacity:0;transform:translateY(4px)}}
+.blink{transform-box:fill-box;transform-origin:center;animation:blink 5s 1.6s infinite}@keyframes blink{0%,88%,100%{transform:scaleY(1)}92%{transform:scaleY(.12)}96%{transform:scaleY(1)}}
+.nod{transform-box:fill-box;transform-origin:50% 100%;animation:nod 5s 3.6s infinite}@keyframes nod{0%,10%,100%{transform:translateY(0)}4%{transform:translateY(-2px)}7%{transform:translateY(.5px)}}
 @media (prefers-reduced-motion: reduce){*{animation:none!important}}
 </style>
 <defs><linearGradient id="duoSm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${Z.sm0}"/><stop offset="1" stop-color="${Z.sm1}"/></linearGradient>${[...gradients.values()].join('')}</defs>

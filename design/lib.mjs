@@ -45,10 +45,10 @@ export function doc(w, h, title, desc) {
       const body = spans ? spans.map(([text, f]) => { reg('nunito', w, text); return f ? `<tspan fill="${f}">${esc(text)}</tspan>` : esc(text) }).join('') : (reg('nunito', w, s), esc(s))
       return `<text x="${r2(x)}" y="${r2(y)}" font-family="${SANS}" ${attrs(size, w, fill, anchor, ls, extra)}>${body}</text>`
     },
-    /** JetBrains Mono text (regular weight only). */
-    m: (x, y, s, { size = 13, fill = Z.muted, anchor = 'start', ls = 0, extra = '' } = {}) => {
-      reg('mono', 400, s)
-      return `<text x="${r2(x)}" y="${r2(y)}" font-family="${MONOF}" ${attrs(size, 400, fill, anchor, ls, extra)}>${esc(s)}</text>`
+    /** JetBrains Mono text, regular (400) or extra bold (800). */
+    m: (x, y, s, { size = 13, w = 400, fill = Z.muted, anchor = 'start', ls = 0, extra = '' } = {}) => {
+      reg('mono', w, s)
+      return `<text x="${r2(x)}" y="${r2(y)}" font-family="${MONOF}" ${attrs(size, w, fill, anchor, ls, extra)}>${esc(s)}</text>`
     },
     reg,
     render: (defs = '', css = '') => {
@@ -56,7 +56,7 @@ export function doc(w, h, title, desc) {
       const faces = []
       for (const [k, chars] of used) {
         const [fam, wt] = k.split(':')
-        const src = fam === 'nunito' ? join(NUNITO, `Nunito-${wt}.ttf`) : join(VENDOR, 'jetbrains-mono-latin-400-normal.woff2')
+        const src = fam === 'nunito' ? join(NUNITO, `Nunito-${wt}.ttf`) : join(VENDOR, `jetbrains-mono-latin-${wt}-normal.woff2`)
         const out = join(dir, `${fam}-${wt}.woff2`)
         const text = [...new Set(chars + ' 0123456789')].join('')
         execFileSync('python3', ['-m', 'fontTools.subset', src, `--text=${text}`, '--flavor=woff2', `--output-file=${out}`, '--layout-features=kern,liga,calt,tnum', '--no-hinting'])
@@ -153,16 +153,8 @@ export function glyphTile(lines, x, y, size, face, { depth = Math.max(3, size * 
   return { defs, body }
 }
 
-/** Line glyphs for the scene tiles, drawn on a 24 px grid. */
+/** Line glyphs for the glyph discs, drawn on a 24 px grid. */
 export const GLYPHS = {
-  laptop: '<path d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9H4z"/><path d="M2 19h20"/><path d="M10 8.5 8 10.5l2 2M14 8.5l2 2-2 2"/>',
-  shield: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/>',
-  package: '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><path d="M3.3 7 12 12l8.7-5M12 22V12"/>',
-  cluster: '<path d="M12 2.5 20.2 7v10L12 21.5 3.8 17V7z"/><circle cx="12" cy="8.2" r="1.6"/><circle cx="8.4" cy="14.6" r="1.6"/><circle cx="15.6" cy="14.6" r="1.6"/><path d="M11.2 9.6 9.2 13.2M12.8 9.6l2 3.6M10 14.6h4"/>',
-  cloud: '<path d="M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z"/>',
-  users: '<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>',
-  pulse: '<path d="M22 12h-4l-3 9L9 3l-3 9H2"/>',
-  lock: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
   book: '<path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"/><path d="M10 2v8l3-3 3 3V2"/>',
   monitor: '<rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>',
 }

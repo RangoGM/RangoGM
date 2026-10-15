@@ -2,7 +2,14 @@
 
 The animated SVGs in `assets/` are generated, not hand-edited. They share one look: rounded zinc
 cards with a solid 3D bottom edge, round 3D icon discs, Nunito at heavy weights, cyan accent stops and
-Title Case labels. The hero's ASCII liquid follows RangoNetwork's sign-in background.
+Title Case labels. The hero's ASCII liquid follows RangoNetwork's sign-in background, and Now
+Building is drawn flat, like one of RangoNetwork's lesson animations, with the lessons' device icons
+and each service's own icon.
+
+Every card plays its entrance once and then keeps looping quietly: the liquid at 60 frames a
+second, a commit going live in Now Building, a hop wave across the icon discs, a verify wave down
+the ccna-labs domains, rings on the certification discs, a light through the motto, and a light
+across the contribution calendar.
 
 ## Rebuild
 
@@ -18,8 +25,9 @@ embedded as a font subset, so change copy in `build.mjs` and rebuild instead of 
 
 | File | Section |
 | --- | --- |
-| `build.mjs` → `hero()` | A card in the looping ASCII liquid holding the name, `Building...` and the typed CLI line |
-| `build.mjs` → `building()` | Now Building: header, Built With row and the lesson-style pipeline scene |
+| `build.mjs` → `hero()` | The ASCII liquid (an 8 s loop at 60 frames a second) with the name, `Building...` and the typed CLI line set into it |
+| `ramp-font.py` | The liquid's font: JetBrains Mono's ramp glyphs, each drawn in its own alpha (COLR colour layers), so a frame is one run of text per row |
+| `build.mjs` → `building()` | Now Building, drawn like a RangoNetwork lesson animation: an 18 s loop over a topology (a commit through GitHub Actions' security checks to Amazon ECR, a rolling update by Amazon EKS, a learner's request through Cloudflare and the load balancer, metrics into Grafana), with step chips, a status line and the Built With row |
 | `build.mjs` → `labs()` | ccna-labs card (lab groups come from `vendor/ccna-labs-folders.json`) |
 | `build.mjs` → `techStack()`, `aiTools()` | Tech Stack & Tools and AI Main Tools (edit the `STACK` list to add a tool) |
 | `build.mjs` → `certifications()` | Certification cards and statuses |
@@ -50,7 +58,13 @@ so the workflow can read the total without adding views.
 ## Sources
 
 - `vendor/Nunito-Variable.ttf`: Nunito, SIL Open Font License 1.1 (`vendor/OFL.txt`).
-- `vendor/jetbrains-mono-latin-400-normal.woff2`: JetBrains Mono, SIL Open Font License 1.1 (`vendor/JetBrainsMono-OFL.txt`).
+- `vendor/jetbrains-mono-latin-400-normal.woff2`, `vendor/jetbrains-mono-latin-800-normal.woff2`: JetBrains Mono, SIL Open Font
+  License 1.1 (`vendor/JetBrainsMono-OFL.txt`).
+- `vendor/devices/`: the Cisco network topology icons RangoNetwork's lessons use (laptop, workstation, wireless router).
+- `vendor/aws/`: Amazon ECR, Amazon EKS and Elastic Load Balancing from the
+  [AWS Architecture Icons](https://aws.amazon.com/architecture/icons/), via the `aws-icons` npm package 3.3.0.
+- `vendor/kubernetes/pod.svg`: the pod icon from the [Kubernetes Icons Set](https://github.com/kubernetes/community/tree/master/icons)
+  (Apache-2.0 or CC-BY-4.0), with Inkscape's editor metadata removed.
 - `vendor/icons.json`: brand marks from [Simple Icons](https://simpleicons.org) 15.16.0 and 11.15.0 (CC0),
   OpenAI and Codex from [LobeHub Icons](https://github.com/lobehub/lobe-icons) (MIT), Grafana Loki from
   [homarr-labs/dashboard-icons](https://github.com/homarr-labs/dashboard-icons) (Apache-2.0).

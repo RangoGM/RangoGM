@@ -1,8 +1,10 @@
 // RangoGM profile artwork built from RangoNetwork's own components.
 // Usage: node design/build.mjs [outDir]   (writes to assets/ by default)
-import { readFileSync, writeFileSync, mkdirSync } from 'node:fs'
+import { readFileSync, writeFileSync, mkdirSync, mkdtempSync } from 'node:fs'
 import { join } from 'node:path'
-import { here, VENDOR, Z, MONOF, tw, r2, b64, esc, doc, duo, duoDefs, pill, appIcon, glyphTile, GLYPHS, resetIconDefs, mix } from './lib.mjs'
+import { execFileSync } from 'node:child_process'
+import { tmpdir } from 'node:os'
+import { here, VENDOR, Z, MONOF, tw, r2, b64, esc, doc, duo, duoDefs, pill, appIcon, glyphTile, GLYPHS, ICONS, resetIconDefs, mix } from './lib.mjs'
 
 const OUT = process.argv[2] || join(here, '..', 'assets')
 mkdirSync(OUT, { recursive: true })
@@ -17,8 +19,9 @@ const save = (name, make) => {
 
 // ================================================================== HERO
 // The sign-in page's ASCII liquid (components/auth/ascii-background.tsx: asciify's fluid ramp and
-// field) as a seamless loop. The name is drawn in the same characters and the liquid clears around
-// it and around the CLI lines, so the text sits inside the animation rather than on a card.
+// field) as a seamless 8 s loop at 60 frames a second. There is no card: the liquid keeps flowing
+// behind the name, "Building..." and the typed CLI line, dimmed there; a soft dark halo that
+// follows the letters keeps them clear of it, and the text lights the liquid around it a little cyan.
 const RAMP = ' .:+-=xICA$FY#@'
 function liquidFrame(cols, rows, cellW, cellH, tau, mask) {
   const width = cols * cellW, height = rows * cellH, aspect = width / height
@@ -47,12 +50,10 @@ function liquidFrame(cols, rows, cellW, cellH, tau, mask) {
   return out
 }
 
-/** One text element per run of glyphs; runs split at 4+ blanks, and non-breaking spaces hold columns. */
-function asciiRows(line, x0, y, cellW) {
+/** A frame row as tspans, one per stretch of glyphs; 16+ blank cells (such as the card) start a new one. */
+function asciiRow(line, x0, y, cellW) {
   let out = ''
-  for (const run of line.matchAll(/\S(?:\S| {1,3}(?=\S))*/g)) {
-    out += `<text x="${r2(x0 + run.index * cellW)}" y="${r2(y)}">${esc(run[0]).replace(/ /g, ' ')}</text>`
-  }
+  for (const run of line.matchAll(/\S(?:\S| {1,15}(?=\S))*/g)) out += `<tspan x="${r2(x0 + run.index * cellW)}" y="${r2(y)}">${esc(run[0])}</tspan>`
   return out
 }
 
@@ -60,58 +61,75 @@ function hero() {
   resetIconDefs()
   const W = 1200, H = 400
   const name = 'Dat Tran Gia'
-  const d = doc(W, H, `${name} — Building...`, `${name}, on a card inside an animated ASCII liquid, with "Building..." and a terminal typing network, Kubernetes, Terraform and security commands.`)
+  const d = doc(W, H, `${name} — Building...`, `${name} inside an animated ASCII liquid that parts around the name, "Building..." and a terminal typing network, Kubernetes, Terraform and security commands.`)
   // the liquid: 7 x 13 px cells across the whole banner
   const cellW = 7, cellH = 13, cols = 171, rows = 30, ox = (W - cols * cellW) / 2, oy = 5
   const font = 11.667 // JetBrains Mono advances 0.6em: 7 px columns
 
-  // the card, as the sign-in card sits in the liquid: the name, "Building..." and the CLI
-  const cardW = 520, cardH = 236, cardX = (W - cardW) / 2, cardY = 80, pad = 44
-  const card = { left: cardX, right: cardX + cardW, top: cardY, bottom: cardY + cardH + 4 }
-  const nx = cardX + pad, nameY = cardY + 86
-
+  // The text, centred: the name, "Building..." over a progress track, and the CLI line, which
+  // types from a fixed start so its longest command is centred.
+  const nameSize = 104, nameLs = -5
+  const nameW = tw(name, nameSize, 950, nameLs) - nameLs
   const prompt = 'dat@hcmc:~$ '
   const cmds = ['show ip ospf neighbor', 'kubectl get pods -A', 'terraform validate', 'npm run security:check']
-  const cliSize = 17, cliCh = 0.6 * cliSize
-  const bx = cardX + pad, buildY = cardY + 138, trackY = cardY + 158, cliY = cardY + 202, trackW = cardW - 2 * pad
+  const buildSize = 24, cliSize = 21, cliCh = 0.6 * cliSize
+  const cliW = (prompt.length + Math.max(...cmds.map((c) => c.length)) + 1) * cliCh
+  const bw = 'Building'.length * 0.6 * buildSize, buildW = bw + 3 * 0.6 * buildSize
+  const nameX = (W - nameW) / 2, buildX = (W - buildW) / 2, cliX = Math.round((W - cliW) / 2)
+  const nameY = 167, buildY = 231, trackY = 249, cliY = 304, trackW = Math.round(cliW), trackX = (W - trackW) / 2
+  const mx = W / 2, my = 200, rx = 400, ry = 142
 
-  // the liquid thins out over 40 px around the card and never draws under it
-  const mask = new Float32Array(cols * rows)
+  // Behind the text the liquid dims to `floor`, so the middle still moves, but quietly. The dim
+  // region is a soft ellipse whose edge laps in and out twice a loop.
+  const smooth = (t) => { const c = Math.min(1, Math.max(0, t)); return c * c * (3 - 2 * c) }
+  const region = new Float32Array(cols * rows), turn = new Float32Array(cols * rows)
   for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
-    const x = (c + 0.5) * cellW + ox, y = (r + 0.5) * cellH + oy
-    const outX = Math.max(card.left - x, 0, x - card.right), outY = Math.max(card.top - y, 0, y - card.bottom)
-    mask[r * cols + c] = Math.min(1, Math.hypot(outX, outY) / 40)
+    const x = (c + 0.5) * cellW + ox, y = (r + 0.5) * cellH + oy, i = r * cols + c
+    // distance outside the ellipse (negative inside)
+    region[i] = (Math.hypot((x - mx) / rx, (y - my) / ry) - 1) * ry
+    turn[i] = Math.atan2((y - my) / ry, (x - mx) / rx)
+  }
+  const floor = 0.28
+  const maskAt = (tau) => {
+    const mask = new Float32Array(cols * rows)
+    for (let i = 0; i < mask.length; i++) {
+      const edge = 6 * Math.sin(2 * Math.PI * 2 * tau + 3 * turn[i])
+      mask[i] = floor + (1 - floor) * smooth((region[i] - edge + 20) / 70)
+    }
+    return mask
   }
 
-  const N = 40, dur = 8
-  d.reg('mono', 400, RAMP + ' ')
-  const layers = [[1, 5, 0.22], [6, 14, 0.44]]
-  const key = (k) => r2((k / N) * 1e4) / 1e4
+  // 60 frames a second over the 8 s loop. Only the current frame is displayed (display, not
+  // visibility), so a browser lays out one frame at a time rather than all 480 when it loads.
+  const fps = 60, dur = 8, N = fps * dur
+  const key = (k) => Math.round((k / N) * 1e5) / 1e5
   let frames = ''
   for (let f = 0; f < N; f++) {
-    const grid = liquidFrame(cols, rows, cellW, cellH, f / N, mask)
-    const show = f === 0 ? `values="visible;hidden" keyTimes="0;${key(1)}"` : `values="hidden;visible;hidden" keyTimes="0;${key(f)};${key(f + 1)}"`
-    let g = `<g visibility="${f === 0 ? 'visible' : 'hidden'}"><animate attributeName="visibility" ${show} calcMode="discrete" dur="${dur}s" repeatCount="indefinite"/>`
-    for (const [lo, hi, op] of layers) {
-      g += `<g opacity="${op}">`
-      for (let r = 0; r < rows; r++) {
-        let line = ''
-        for (let c = 0; c < cols; c++) { const v = grid[r * cols + c]; line += v >= lo && v <= hi ? RAMP[v] : ' ' }
-        g += asciiRows(line, ox, oy + r * cellH + 10, cellW)
-      }
-      g += '</g>'
+    const grid = liquidFrame(cols, rows, cellW, cellH, f / N, maskAt(f / N))
+    const show = f === 0 ? `values="inline;none" keyTimes="0;${key(1)}"` : `values="none;inline;none" keyTimes="0;${key(f)};${key(f + 1)}"`
+    let frame = `<text xml:space="preserve" display="${f === 0 ? 'inline' : 'none'}"><animate attributeName="display" ${show} calcMode="discrete" dur="${dur}s" repeatCount="indefinite"/>`
+    for (let r = 0; r < rows; r++) {
+      let line = ''
+      for (let c = 0; c < cols; c++) line += RAMP[grid[r * cols + c]]
+      frame += asciiRow(line, ox, oy + r * cellH + 10, cellW)
     }
-    frames += g + '</g>'
+    frames += frame + '</text>'
   }
+  // The ramp's glyphs carry their own alpha (ramp-font.py), as in the sign-in page's glyph atlas;
+  // the grey fill only shows where a browser can't draw colour glyphs.
+  const rampFont = join(mkdtempSync(join(tmpdir(), 'rg-')), 'ramp.woff2')
+  execFileSync('python3', [join(here, 'ramp-font.py'), join(VENDOR, 'jetbrains-mono-latin-400-normal.woff2'), rampFont, RAMP, '0.5'])
 
-  let defs = `${duoDefs}<clipPath id="panel"><rect width="${W}" height="${H}" rx="24"/></clipPath>
+  let defs = `<clipPath id="panel"><rect width="${W}" height="${H}" rx="24"/></clipPath>
 <radialGradient id="vig" cx=".5" cy=".5" r=".75"><stop offset=".62" stop-color="${Z.page}" stop-opacity="0"/><stop offset="1" stop-color="${Z.page}" stop-opacity=".8"/></radialGradient>
-<linearGradient id="nameInk" gradientUnits="userSpaceOnUse" x1="${nx}" y1="0" x2="${nx + trackW}" y2="0"><stop offset="0" stop-color="#f4f4f5"/><stop offset=".42" stop-color="#f4f4f5"/><stop offset=".5" stop-color="${Z.cyan}"/><stop offset=".58" stop-color="#f4f4f5"/><stop offset="1" stop-color="#f4f4f5"/><animateTransform attributeName="gradientTransform" type="translate" values="-${trackW} 0;-${trackW} 0;${trackW} 0" keyTimes="0;.55;1" dur="7s" begin="1.8s" repeatCount="indefinite"/></linearGradient>
-<clipPath id="track"><rect x="${bx}" y="${trackY}" width="${trackW}" height="4" rx="2"/></clipPath>
+<radialGradient id="spill" gradientUnits="userSpaceOnUse" cx="${mx}" cy="${my}" r="270" gradientTransform="translate(${mx} ${my}) scale(2.2 1) translate(${-mx} ${-my})"><stop offset="0" stop-color="${Z.cyan}"/><stop offset=".55" stop-color="${mix(Z.cyan, '#ffffff', 0.3)}"/><stop offset="1" stop-color="#ffffff"/></radialGradient>
+<linearGradient id="nameInk" gradientUnits="userSpaceOnUse" x1="${r2(nameX)}" y1="0" x2="${r2(nameX + nameW)}" y2="0"><stop offset="0" stop-color="#f4f4f5"/><stop offset=".42" stop-color="#f4f4f5"/><stop offset=".5" stop-color="${Z.cyan}"/><stop offset=".58" stop-color="#f4f4f5"/><stop offset="1" stop-color="#f4f4f5"/><animateTransform attributeName="gradientTransform" type="translate" values="-${r2(nameW)} 0;-${r2(nameW)} 0;${r2(nameW)} 0" keyTimes="0;.55;1" dur="7s" begin="1.8s" repeatCount="indefinite"/></linearGradient>
+<clipPath id="track"><rect x="${trackX}" y="${trackY}" width="${trackW}" height="4" rx="2"/></clipPath>
+<filter id="halo" x="-6%" y="-40%" width="112%" height="180%" color-interpolation-filters="sRGB"><feMorphology in="SourceAlpha" operator="dilate" radius="3" result="grow"/><feGaussianBlur in="grow" stdDeviation="5" result="soft"/><feFlood flood-color="${Z.page}" flood-opacity=".94"/><feComposite in2="soft" operator="in" result="halo"/><feMerge><feMergeNode in="halo"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 <linearGradient id="trackLight" x1="0" x2="1"><stop offset="0" stop-color="${Z.cyan}" stop-opacity="0"/><stop offset=".5" stop-color="${Z.cyan}"/><stop offset="1" stop-color="${Z.cyan}" stop-opacity="0"/></linearGradient>`
 
   // terminal typing: each command types, holds, clears; one cursor follows
-  const slot = 3.4, total = slot * cmds.length, cmdX = bx + prompt.length * cliCh
+  const slot = 3.4, total = slot * cmds.length, cmdX = cliX + prompt.length * cliCh
   const cur = { kt: [0], x: [cmdX] }
   let typed = ''
   cmds.forEach((c, i) => {
@@ -120,30 +138,37 @@ function hero() {
     for (let k = 0; k <= c.length; k++) { const t = start + 0.35 + k * 0.055; kt.push(r2((t / total) * 1e4) / 1e4); vw.push(r2(k * cliCh)); cur.kt.push(r2((t / total) * 1e4) / 1e4); cur.x.push(r2(cmdX + k * cliCh)) }
     kt.push(r2((clear / total) * 1e4) / 1e4); vw.push(0); kt.push(1); vw.push(0)
     cur.kt.push(r2((clear / total) * 1e4) / 1e4); cur.x.push(cmdX)
-    defs += `<clipPath id="cmd${i}"><rect x="${r2(cmdX)}" y="${cliY - 16}" height="22" width="0"><animate attributeName="width" values="${vw.join(';')}" keyTimes="${kt.join(';')}" dur="${total}s" calcMode="discrete" repeatCount="indefinite"/></rect></clipPath>`
+    defs += `<clipPath id="cmd${i}"><rect x="${r2(cmdX)}" y="${cliY - 19}" height="26" width="0"><animate attributeName="width" values="${vw.join(';')}" keyTimes="${kt.join(';')}" dur="${total}s" calcMode="discrete" repeatCount="indefinite"/></rect></clipPath>`
     typed += `<g clip-path="url(#cmd${i})">${d.m(cmdX, cliY, c, { size: cliSize, fill: Z.ink })}</g>`
   })
   cur.kt.push(1); cur.x.push(cmdX)
 
-  // liquid, vignette and frame
+  // liquid, its cyan light near the text, vignette and frame
   d.add(`<g clip-path="url(#panel)"><rect width="${W}" height="${H}" fill="${Z.page}"/>
-<g font-family="${MONOF}" font-size="${font}" fill="#ffffff" style="animation:fadeIn 1.2s both">${frames}</g>
+<g font-family="Ramp, ${MONOF}" font-size="${font}" fill="#4a4a50" style="animation:fadeIn 1.2s both">${frames}</g>
+<rect width="${W}" height="${H}" fill="url(#spill)" style="mix-blend-mode:multiply"/>
 <rect width="${W}" height="${H}" fill="url(#vig)"/></g>
 <rect x=".5" y=".5" width="${W - 1}" height="${H - 1}" rx="24" fill="none" stroke="${Z.edge}"/>`)
 
-  // the card and everything on it
-  const bw = 'Building'.length * 0.6 * 20
-  d.add(`<g style="animation:rise .8s .2s both">${duo(cardX, cardY, cardW, cardH, { r: 26 })}
-${d.t(nx - 2, nameY, name, { size: 64, w: 950, fill: 'url(#nameInk)', ls: -3.2 })}
-${d.m(bx, buildY, 'Building', { size: 20, fill: Z.ink })}${[0, 1, 2].map((k) => `<g opacity=".2">${d.m(bx + bw + k * 12, buildY, '.', { size: 20, fill: Z.cyan })}<animate attributeName="opacity" values=".2;1;1;.2" keyTimes="0;.2;.6;1" dur="1.5s" begin="${r2(k * 0.25)}s" repeatCount="indefinite"/></g>`).join('')}
-<rect x="${bx}" y="${trackY}" width="${trackW}" height="4" rx="2" fill="#27272a"/>
-<g clip-path="url(#track)"><rect x="${bx - 160}" y="${trackY}" width="160" height="4" fill="url(#trackLight)"><animate attributeName="x" values="${bx - 160};${bx + trackW}" dur="2.8s" repeatCount="indefinite"/></rect></g>
-${d.m(bx, cliY, 'dat@hcmc', { size: cliSize, fill: Z.green })}${d.m(bx + 8 * cliCh, cliY, ':~$', { size: cliSize, fill: Z.cyan })}${typed}
-<rect x="${r2(cmdX)}" y="${cliY - 14}" width="${r2(cliCh)}" height="18" rx="1.5" fill="${Z.cyan}"><animate attributeName="x" values="${cur.x.join(';')}" keyTimes="${cur.kt.join(';')}" dur="${total}s" calcMode="discrete" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g>`)
+  // the text, straight on the liquid, inside its halo
+  d.add(`<g style="animation:rise .8s .2s both"><g filter="url(#halo)">${d.t(nameX, nameY, name, { size: nameSize, w: 950, fill: 'url(#nameInk)', ls: nameLs })}
+${d.m(buildX, buildY, 'Building', { size: buildSize, fill: Z.ink })}${[0, 1, 2].map((k) => `<g opacity=".2">${d.m(buildX + bw + k * 0.6 * buildSize, buildY, '.', { size: buildSize, fill: Z.cyan })}<animate attributeName="opacity" values=".2;1;1;.2" keyTimes="0;.2;.6;1" dur="1.5s" begin="${r2(k * 0.25)}s" repeatCount="indefinite"/></g>`).join('')}
+<rect x="${trackX}" y="${trackY}" width="${trackW}" height="4" rx="2" fill="#27272a"/>
+<g clip-path="url(#track)"><rect x="${trackX - 160}" y="${trackY}" width="160" height="4" fill="url(#trackLight)"><animate attributeName="x" values="${trackX - 160};${trackX + trackW}" dur="2.8s" repeatCount="indefinite"/></rect></g>
+${d.m(cliX, cliY, 'dat@hcmc', { size: cliSize, fill: Z.green })}${d.m(cliX + 8 * cliCh, cliY, ':~$', { size: cliSize, fill: Z.cyan })}${typed}
+<rect x="${r2(cmdX)}" y="${cliY - 17}" width="${r2(cliCh)}" height="22" rx="1.5" fill="${Z.cyan}"><animate attributeName="x" values="${cur.x.join(';')}" keyTimes="${cur.kt.join(';')}" dur="${total}s" calcMode="discrete" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1s" calcMode="discrete" repeatCount="indefinite"/></rect></g></g>`)
   d.reg('mono', 400, 'Building.dat@hcmc:~$' + cmds.join(''))
 
-  return d.render(defs, `@keyframes rise{from{opacity:0;transform:translateY(10px)}}@keyframes fadeIn{from{opacity:0}}`)
+  return d.render(defs, `@font-face{font-family:'Ramp';src:url(data:font/woff2;base64,${b64(rampFont)}) format('woff2')}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}}@keyframes fadeIn{from{opacity:0}}`)
 }
+
+// ================================================================== SHARED HOP
+// A cartoon hop for icon discs: up, a squash on landing, settle, then rest until the loop comes
+// round. Each disc starts a little later than the one before, so the hop runs across a card as a
+// wave every 8 s.
+const HOP = `.hop{transform-box:fill-box;transform-origin:50% 100%;animation:hop 8s infinite}
+@keyframes hop{0%{transform:translateY(0) scale(1,1);animation-timing-function:cubic-bezier(.2,.7,.3,1)}2.5%{transform:translateY(-8px) scale(.96,1.05);animation-timing-function:cubic-bezier(.6,0,.8,.4)}5%{transform:translateY(0) scale(1.07,.93);animation-timing-function:ease-out}6.5%{transform:translateY(0) scale(.98,1.02);animation-timing-function:ease-in-out}8%,100%{transform:translateY(0) scale(1,1)}}`
 
 // ================================================================== SHARED SECTION HEADER
 function header(d, x, y, kicker, title, { accent = Z.cyan } = {}) {
@@ -153,108 +178,269 @@ function header(d, x, y, kicker, title, { accent = Z.cyan } = {}) {
 
 
 // ================================================================== NOW BUILDING
-// One card: what RangoNetwork is, the stack it runs on, and a lesson-style scene of how a change
-// ships (commit → CI security checks → OIDC to ECR → Kubernetes on AWS) and how a learner reaches it
-// (Cloudflare Tunnel → Kubernetes and back). Packets, speech bubbles and marks follow the lessons.
+// Drawn like RangoNetwork's lesson scenes: a topology (the lessons' device icons for the people and
+// their networks, each service's own icon for the platform), packets hopping along links that
+// light up, devices pinging as packets land, speech bubbles, marks and tags, step chips and a
+// status line. One 18 s loop: a commit passes CI's security checks, goes to Amazon ECR through
+// OIDC and Amazon EKS rolls it out a pod at a time; a learner loads a lesson through Cloudflare
+// and the load balancer and gets the answer back; metrics land in Grafana.
 function building() {
   resetIconDefs()
-  const W = 1200, H = 474, T = 14
-  const d = doc(W, H, 'Now Building — RangoNetwork', 'RangoNetwork, a CCNA v2.0 learning platform, built and operated on AWS, Kubernetes and Terraform with security checks in CI. The scene shows a commit passing CI checks, an image published to ECR through OIDC, a rollout to Kubernetes, and a learner request through Cloudflare Tunnel.')
+  const W = 1200, H = 598, T = 18
+  const d = doc(W, H, 'Now Building — RangoNetwork', 'RangoNetwork, a CCNA v2.0 learning platform built and run on AWS, Kubernetes and Terraform with security checks in CI, drawn as one of its own lesson animations: a commit passes typecheck, tests and a Trivy scan in GitHub Actions, is pushed to Amazon ECR through OIDC and rolled out by Amazon EKS one Kubernetes pod at a time; a learner loads a lesson through Cloudflare Tunnel and the load balancer; metrics and logs land in Grafana.')
   let defs = duoDefs
   let css = `@keyframes rise{from{opacity:0;transform:translateY(12px)}}
 @keyframes ping{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(2.6);opacity:0}}.ping{animation:ping 1.8s ease-out infinite}
-.pop{transform-box:fill-box;opacity:0}`
+.k{transform-box:fill-box}`
+  const pct = (t) => r2((Math.max(0, Math.min(T, t)) / T) * 100)
+  const kt = (t) => Math.round((Math.max(0, Math.min(T, t)) / T) * 1e4) / 1e4
+  // A CSS animation on the loop: [time, declarations] keyframes. Returns its class.
+  let kid = 0
+  const keys = (frames, origin = 'center') => {
+    const id = `s${kid++}`
+    css += `@keyframes ${id}{${[...frames].sort((a, b) => a[0] - b[0]).map(([t, decl]) => `${pct(t)}%{${decl}}`).join('')}}.${id}{transform-origin:${origin};animation:${id} ${T}s linear infinite}`
+    return `k ${id}`
+  }
+  // Pops in at t0 like the lessons' marks and bubbles (overshooting a little), fades out by t1 + .25.
+  const pop = (t0, t1, origin, body) => `<g class="${keys([[0, 'opacity:0;transform:scale(.55)'], [t0, 'opacity:0;transform:scale(.55)'], [t0 + 0.24, 'opacity:1;transform:scale(1.06)'], [t0 + 0.42, 'opacity:1;transform:scale(1)'], [t1, 'opacity:1;transform:scale(1)'], [t1 + 0.25, 'opacity:0;transform:scale(.92)'], [T, 'opacity:0;transform:scale(.92)']], origin)}">${body}</g>`
+  // An opacity track from windows of [t0, t1], easing in and out over `ease` s.
+  const track = (windows, ease = 0.18) => {
+    const v = [], k = []
+    const put = (t, o) => { if (k.length && t <= k[k.length - 1]) t = k[k.length - 1] + 0.001; k.push(t); v.push(o) }
+    put(0, windows.some(([a]) => a <= 0) ? 1 : 0)
+    for (const [a, b] of windows) { if (a > 0) { put(a, 0); put(a + ease, 1) } put(b, 1); put(b + ease, 0) }
+    put(T, v[v.length - 1])
+    return `values="${v.join(';')}" keyTimes="${k.map(kt).join(';')}"`
+  }
+  const HALO = '#0c0c0f'
+  const label = (x, y, text, { size = 14, w = 900, fill = Z.ink, anchor = 'middle' } = {}) => d.t(x, y, text, { size, w, fill, anchor, extra: ` stroke="${HALO}" stroke-width="4" stroke-linejoin="round" paint-order="stroke"` })
+
   d.add(duo(0, 0, W, H - 4, { r: 24 }))
 
-  // ---- header
-  d.add(`<g style="animation:rise .6s both">${d.t(48, 62, 'NOW BUILDING', { size: 12.5, w: 900, fill: Z.muted, ls: 2.2 })}
-${pill(d, 48 + tw('NOW BUILDING', 12.5, 900, 2.2) + 10, 46, 'IN DEVELOPMENT', { color: Z.green, size: 10.5, dot: true }).svg}
-${d.t(47, 102, '', { size: 32, w: 900, fill: Z.ink, ls: -1.2, spans: [['RangoNetwork ', null], ['—', Z.cyan], [' CCNA v2.0 Learning Platform', null]] })}
-${d.t(48, 132, 'Built And Run End To End On AWS, Kubernetes And Terraform, With Security Checks In CI', { size: 15.5, w: 700, fill: Z.lead })}</g>`)
+  // ---- head, as a lesson panel's: kicker, title, and the line under it
+  d.add(`<g style="animation:rise .6s both">${d.t(48, 58, 'NOW BUILDING', { size: 12.5, w: 900, fill: Z.cyan, ls: 2.2 })}
+${pill(d, 48 + tw('NOW BUILDING', 12.5, 900, 2.2) + 10, 42, 'IN DEVELOPMENT', { color: Z.green, size: 10.5, dot: true }).svg}
+${d.t(47, 100, '', { size: 30, w: 900, fill: Z.ink, ls: -1.1, spans: [['RangoNetwork ', null], ['—', Z.cyan], [' CCNA v2.0 Learning Platform', null]] })}
+${d.t(48, 130, 'Built And Run End To End On AWS, Kubernetes And Terraform, With Security Checks In CI', { size: 15, w: 700, fill: Z.lead })}</g>`)
+  const headBottom = 152, statusTop = 492, statusBottom = 542
+  defs += `<radialGradient id="stageGlow" gradientUnits="userSpaceOnUse" cx="${W / 2}" cy="${headBottom}" r="${W * 0.6}" gradientTransform="translate(${W / 2} ${headBottom}) scale(1 .62) translate(${-W / 2} ${-headBottom})"><stop offset="0" stop-color="#0e2a33"/><stop offset=".62" stop-color="#0e2a33" stop-opacity="0"/></radialGradient>
+<clipPath id="stage"><rect x="1" y="${headBottom}" width="${W - 2}" height="${statusTop - headBottom}"/></clipPath>`
+  d.add(`<rect x="1" y="${headBottom}" width="${W - 2}" height="${statusTop - headBottom}" fill="url(#stageGlow)" clip-path="url(#stage)"/><path d="M1 ${headBottom}H${W - 1}M1 ${statusTop}H${W - 1}M1 ${statusBottom}H${W - 1}" stroke="#27272a"/>`)
+
+  // ---- the steps: chips over the stage, dots and a sentence in the status line
+  const steps = [
+    ['Commit', 0, 2.6, 'A Change Leaves The Dev Laptop With git push'],
+    ['Check', 2.6, 5.0, 'CI Runs Typecheck, Tests And A Trivy Scan Before Anything Ships'],
+    ['Publish', 5.0, 7.4, 'The Image Goes To The Registry Through OIDC, With No Static Keys'],
+    ['Deploy', 7.4, 10.6, 'Kubernetes Rolls It Out One Pod At A Time, So Lessons Stay Up'],
+    ['Serve', 10.6, 15.4, 'A Learner Loads A Lesson Through Cloudflare Tunnel, With No Open Ports'],
+    ['Observe', 15.4, T, 'Metrics And Logs Land In Grafana'],
+  ]
+  // A value that steps with the chips, gliding .35 s into each new step (and back to the first
+  // as the loop ends).
+  const glide = (vals) => {
+    const v = [vals[0]], k = [0]
+    steps.forEach(([, t0], i) => { if (i) { k.push(t0 - 0.001, t0 + 0.35); v.push(vals[i - 1], vals[i]) } })
+    k.push(T - 0.35, T); v.push(vals[vals.length - 1], vals[0])
+    return `values="${v.join(';')}" keyTimes="${k.map(kt).join(';')}" calcMode="spline" keySplines="${k.slice(1).map((_, i) => (i % 2 ? '0 0 1 1' : '.45 0 .2 1')).join(';')}"`
+  }
+  const chipY = 168, chipH = 34
+  let cx = 48
+  const chips = steps.map(([name], i) => { const w = 6 + 22 + 8 + tw(name, 13, 800) + 14, c = { x: cx, w, name, n: i + 1 }; cx += w + 8; return c })
+  let chipSvg = `<rect y="${chipY - 0.5}" height="${chipH + 1}" rx="${(chipH + 1) / 2}" fill="#083344" stroke="#22d3ee"><animate attributeName="x" ${glide(chips.map((c) => r2(c.x - 0.5)))} dur="${T}s" repeatCount="indefinite"/><animate attributeName="width" ${glide(chips.map((c) => r2(c.w + 1)))} dur="${T}s" repeatCount="indefinite"/></rect>`
+  chips.forEach((c, i) => {
+    const on = [[steps[i][1], steps[i][2] - 0.05]]
+    chipSvg = `<rect x="${r2(c.x)}" y="${chipY}" width="${r2(c.w)}" height="${chipH}" rx="${chipH / 2}" fill="#18181b" stroke="#3f3f46"/>` + chipSvg
+    chipSvg += `<circle cx="${r2(c.x + 17)}" cy="${chipY + 17}" r="11" fill="#27272a"/><circle cx="${r2(c.x + 17)}" cy="${chipY + 17}" r="11" fill="#06b6d4" opacity="0"><animate attributeName="opacity" ${track(on, 0.3)} dur="${T}s" repeatCount="indefinite"/></circle>`
+    chipSvg += d.t(c.x + 17, chipY + 21.5, String(c.n), { size: 11.5, w: 900, fill: '#e4e4e7', anchor: 'middle' })
+    chipSvg += `${d.t(c.x + 36, chipY + 22, c.name, { size: 13, w: 800, fill: Z.muted })}<g opacity="0"><animate attributeName="opacity" ${track(on, 0.3)} dur="${T}s" repeatCount="indefinite"/>${d.t(c.x + 36, chipY + 22, c.name, { size: 13, w: 800, fill: '#cffafe' })}</g>`
+  })
+  d.add(`<g style="animation:rise .6s .1s both">${chipSvg}</g>`)
+  // status: the current step's dot widens, and its sentence rises in
+  const dotX = (step, i) => 48 + i * 11 + (i > step ? 10 : 0)
+  let status = ''
+  steps.forEach((_, i) => {
+    status += `<rect y="${statusTop + 22}" height="6" rx="3" fill="#3f3f46"><animate attributeName="x" ${glide(steps.map((__, s) => dotX(s, i)))} dur="${T}s" repeatCount="indefinite"/><animate attributeName="width" ${glide(steps.map((__, s) => (s === i ? 16 : 6)))} dur="${T}s" repeatCount="indefinite"/><animate attributeName="fill" ${glide(steps.map((__, s) => (s === i ? '#22d3ee' : '#3f3f46')))} dur="${T}s" repeatCount="indefinite"/></rect>`
+  })
+  steps.forEach(([name, t0, t1, line]) => {
+    status += `<g class="${keys([[0, `opacity:${t0 === 0 ? 1 : 0};transform:translateY(${t0 === 0 ? 0 : 4}px)`], ...(t0 > 0 ? [[t0, 'opacity:0;transform:translateY(4px)'], [t0 + 0.32, 'opacity:1;transform:translateY(0)']] : []), [t1 - 0.12, 'opacity:1;transform:translateY(0)'], [t1, 'opacity:0;transform:translateY(0)'], [T, `opacity:${t1 >= T ? 1 : 0};transform:translateY(0)`]])}">${d.t(128, statusTop + 31, '', { size: 14.5, w: 800, fill: Z.ink, spans: [[`${name} — `, Z.cyan], [line, null]] })}</g>`
+  })
+  d.add(`<g style="animation:rise .6s .2s both">${status}</g>`)
+
+  // ---- the topology
+  // Every icon is drawn centred on its device's point; `at[id]` is the size it's drawn at. The
+  // lessons' device icons fit a 72 x 54 box; the services' own icons are sized to sit level with them.
+  const at = {}
+  const addIcon = (id, svg, w, h) => { at[id] = { w, h }; defs += `<image id="ic-${id}" width="${r2(w)}" height="${r2(h)}" preserveAspectRatio="xMidYMid meet" href="data:image/svg+xml;base64,${Buffer.from(svg).toString('base64')}"/>` }
+  for (const name of ['laptop', 'workstation', 'wireless-router']) {
+    const svg = readFileSync(join(VENDOR, 'devices', `${name}.svg`), 'utf8')
+    const [, , vw, vh] = svg.match(/viewBox="([^"]+)"/)[1].split(/\s+/).map(Number)
+    addIcon(name, svg, Math.min(72, (54 * vw) / vh), Math.min(54, (72 * vh) / vw))
+  }
+  // a Simple Icons mark in its brand colour, cropped to the mark (`box` is its tight viewBox)
+  const brandSvg = (slug, box) => `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${box}"><path fill="#${ICONS[slug].hex}" d="${ICONS[slug].path}"/></svg>`
+  addIcon('actions', brandSvg('githubactions', '0 0 24 24'), 50, 50)
+  addIcon('cloudflare', brandSvg('cloudflare', '0 6.57 24 10.85'), 76, 34.4)
+  addIcon('grafana', brandSvg('grafana', '.95 0 22.09 24'), 46, 50)
+  addIcon('ecr', readFileSync(join(VENDOR, 'aws', 'AmazonElasticContainerRegistry.svg'), 'utf8'), 50, 50)
+  addIcon('eks', readFileSync(join(VENDOR, 'aws', 'AmazonElasticKubernetesService.svg'), 'utf8'), 50, 50)
+  addIcon('elb', readFileSync(join(VENDOR, 'aws', 'ElasticLoadBalancing.svg'), 'utf8'), 50, 50)
+  addIcon('pod', readFileSync(join(VENDOR, 'kubernetes', 'pod.svg'), 'utf8'), 52, 50.5)
+  const ICON_W = 72, ICON_H = 54
+  // the top of what an icon actually draws, for the bubbles and marks above it
+  const iconTop = (n) => n.y - at[n.icon].h / 2
+  const top = 272, bottom = 404, mid = 338
+  const N = {
+    dev: { icon: 'laptop', x: 132, y: top, label: 'Dev Laptop', role: 'Writes The Change' },
+    ci: { icon: 'actions', x: 318, y: top, label: 'CI Security Checks', role: 'GitHub Actions' },
+    reg: { icon: 'ecr', x: 504, y: top, label: 'Image Registry', role: 'Amazon ECR' },
+    learner: { icon: 'workstation', x: 132, y: bottom, label: 'Learner', role: 'Opens A Lesson' },
+    home: { icon: 'wireless-router', x: 318, y: bottom, label: 'Home Router', role: 'Wi-Fi And NAT' },
+    cf: { icon: 'cloudflare', x: 504, y: bottom, label: 'Cloudflare', role: 'Tunnel, No Open Ports' },
+    eks: { icon: 'eks', x: 700, y: top, label: 'Amazon EKS', role: 'Control Plane' },
+    lb: { icon: 'elb', x: 700, y: bottom, label: 'Load Balancer', role: 'Ingress' },
+    pod1: { icon: 'pod', x: 862, y: mid - 68 },
+    pod2: { icon: 'pod', x: 862, y: mid },
+    pod3: { icon: 'pod', x: 862, y: mid + 68 },
+    graf: { icon: 'grafana', x: 1052, y: mid, label: 'Grafana', role: 'Metrics And Logs' },
+  }
+  const pods = ['pod1', 'pod2', 'pod3']
+  // EKS reaches the pods over the control plane (dashed); requests come in through the load balancer
+  const links = [['dev', 'ci'], ['ci', 'reg'], ['learner', 'home'], ['home', 'cf'], ['reg', 'eks'], ['cf', 'lb'], ...pods.map((p) => ['eks', p, 'control']), ...pods.map((p) => ['lb', p]), ...pods.map((p) => [p, 'graf'])]
+  const linkKey = (a, b) => [a, b].sort().join('-')
+
+  // zones, as the lessons draw networks: a dashed, tinted area with its name on a pill
+  const zone = (x, y, w, h, name, tone, { end = false, logo = '', logoW = 0 } = {}) => {
+    const [stroke, fill, ink, ring] = { cyan: ['#0891b2', '#083344', Z.cyan, '#0e7490'], violet: ['#7c3aed', '#2e1065', '#c4b5fd', '#6d28d9'], amber: ['#d97706', '#451903', '#fbbf24', '#b45309'] }[tone]
+    const lw = tw(name, 11, 900, 0.66) + 16 + logoW, lx = end ? x + w - 14 - lw : x + 14
+    return `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="18" fill="${fill}" fill-opacity=".25" stroke="${stroke}" stroke-width="1.5" stroke-dasharray="5 4"/><rect x="${r2(lx)}" y="${y - 10}" width="${r2(lw)}" height="20" rx="10" fill="${HALO}" stroke="${ring}"/>${logo ? logo(lx + 9, y) : ''}${d.t(lx + 8 + logoW, y + 4, name, { size: 11, w: 900, fill: ink, ls: 0.66 })}`
+  }
+  // the AWS logo, white with its orange smile, about 11 px tall from its left edge at (x, y mid)
+  const awsMark = readFileSync(join(VENDOR, 'amazonaws.svg'), 'utf8').match(/ d="([^"]+)"/)[1]
+  const smile = awsMark.indexOf('M21.698')
+  const awsLogo = (x, y) => `<g transform="translate(${r2(x)} ${r2(y - 12.4)}) scale(1.05)"><path d="${awsMark.slice(0, smile)}" fill="#ffffff"/><path d="${awsMark.slice(smile)}" fill="#ff9900"/></g>`
+  let graph = zone(64, 222, 504, 120, 'DELIVERY', 'violet') + zone(64, 356, 330, 122, 'LEARNER AT HOME', 'amber', { end: true }) + zone(606, 222, 506, 256, '· KUBERNETES', 'cyan', { end: true, logo: awsLogo, logoW: 28 })
+
+  // links, each with a cyan copy that lights while a packet is on it
+  const lit = Object.fromEntries(links.map(([a, b]) => [linkKey(a, b), []]))
+  // arrivals per device (it lifts and pings) and departures (it glows as a packet leaves)
+  const arrive = Object.fromEntries(Object.keys(N).map((id) => [id, []]))
+  const depart = Object.fromEntries(Object.keys(N).map((id) => [id, []]))
+  let packets = ''
+  // A packet riding devices `path`, leaving at t0: it eases from device to device, waits a beat
+  // on each one in between, and is gone shortly after it lands. Returns when it lands.
+  const trip = (text, kind, path, t0) => {
+    const pts = path.map((id) => N[id])
+    const hops = pts.slice(1).map((p, i) => Math.hypot(p.x - pts[i].x, p.y - pts[i].y))
+    const total = hops.reduce((a, b) => a + b, 0)
+    let t = t0, dist = 0
+    const kp = [0, 0], ktm = [0, t0], spl = ['0 0 1 1']
+    depart[path[0]].push(t0)
+    hops.forEach((len, i) => {
+      const hop = 0.28 + len / 600
+      lit[linkKey(path[i], path[i + 1])].push([t, t + hop + 0.15])
+      dist += len; t += hop
+      kp.push(dist / total); ktm.push(t); spl.push('.45 0 .2 1')
+      arrive[path[i + 1]].push(t)
+      if (i < hops.length - 1) { t += 0.12; kp.push(dist / total); ktm.push(t); spl.push('0 0 1 1') }
+    })
+    kp.push(1); ktm.push(T); spl.push('0 0 1 1')
+    const [bg, ink] = { request: ['#06b6d4', '#083344'], response: ['#34d399', '#052e1c'], log: ['#fbbf24', '#451a03'] }[kind]
+    const w = text.length * 0.6 * 11 + 18
+    packets += `<g opacity="0"><animateMotion path="M${pts.map((p) => `${p.x} ${p.y}`).join('L')}" keyPoints="${kp.map((v) => Math.round(v * 1e4) / 1e4).join(';')}" keyTimes="${ktm.map(kt).join(';')}" calcMode="spline" keySplines="${spl.join(';')}" dur="${T}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${kt(t0 - 0.05)};${kt(t0 + 0.12)};${kt(t)};${kt(t + 0.16)};1" dur="${T}s" repeatCount="indefinite"/><rect x="${r2(-w / 2 - 3)}" y="-13" width="${r2(w + 6)}" height="26" rx="13" fill="${bg}" fill-opacity=".14"/><rect x="${r2(-w / 2)}" y="-10" width="${r2(w)}" height="20" rx="10" fill="${bg}"/>${d.m(0, 4, text, { size: 11, w: 800, fill: ink, anchor: 'middle' })}</g>`
+    return t
+  }
+  trip('git push', 'request', ['dev', 'ci'], 0.6)
+  trip('image', 'request', ['ci', 'reg'], 3.9)
+  trip('deploy', 'request', ['reg', 'eks'], 6.4)
+  const updated = pods.map((id, i) => trip('v2', 'request', ['eks', id], 7.6 + i * 0.9))
+  const asked = trip('GET /learn', 'request', ['learner', 'home', 'cf', 'lb', 'pod2'], 10.8)
+  const answered = trip('200 OK', 'response', ['pod2', 'lb', 'cf', 'home', 'learner'], asked + 0.2)
+  pods.forEach((id, i) => trip('metrics', 'log', [id, 'graf'], 15.5 + i * 0.22))
+  if (answered > 17.1) throw new Error(`the answer lands too late in the loop (${answered.toFixed(2)} s)`)
+
+  for (const [a, b, kind] of links) {
+    const p = N[a], q = N[b], line = `M${p.x} ${p.y}L${q.x} ${q.y}`, dash = kind === 'control' ? ' stroke-dasharray="1 6"' : ''
+    graph += `<path d="${line}" stroke="${dash ? '#52525b' : '#3f3f46'}" stroke-width="2" stroke-linecap="round"${dash}/>`
+    const w = lit[linkKey(a, b)]
+    if (w.length) graph += `<g opacity="0"><animate attributeName="opacity" ${track(w, 0.12)} dur="${T}s" repeatCount="indefinite"/><path d="${line}" stroke="#06b6d4" stroke-opacity=".28" stroke-width="7" stroke-linecap="round"${dash}/><path d="${line}" stroke="#06b6d4" stroke-width="3" stroke-linecap="round"${dash}/></g>`
+  }
+
+  // A device is in focus (a soft cyan glow behind its icon, its role in cyan) around the moments
+  // a packet leaves or lands on it.
+  const focus = {}
+  for (const id of Object.keys(N)) {
+    const w = [...depart[id].map((t) => [t - 0.45, t + 0.4]), ...arrive[id].map((t) => [t - 0.2, t + 1.1])].sort((a, b) => a[0] - b[0])
+    const merged = []
+    for (const [a, b] of w) { const last = merged[merged.length - 1]; if (last && a <= last[1] + 0.3) last[1] = Math.max(last[1], b); else merged.push([Math.max(0.05, a), Math.min(T - 0.3, b)]) }
+    if (merged.length) focus[id] = merged
+  }
+  defs += `<radialGradient id="focusGlow"><stop offset="0" stop-color="#06b6d4" stop-opacity=".34"/><stop offset="1" stop-color="#06b6d4" stop-opacity="0"/></radialGradient><radialGradient id="readyGlow"><stop offset="0" stop-color="#10b981" stop-opacity=".34"/><stop offset="1" stop-color="#10b981" stop-opacity="0"/></radialGradient>`
+  for (const [id, n] of Object.entries(N)) {
+    const fx = n.x, fy = n.y
+    if (focus[id]) graph += `<ellipse cx="${fx}" cy="${fy}" rx="${ICON_W / 2 + 18}" ry="${ICON_H / 2 + 14}" fill="url(#focusGlow)" opacity="0"><animate attributeName="opacity" ${track(focus[id], 0.3)} dur="${T}s" repeatCount="indefinite"/></ellipse>`
+    // lifts a little and pings each time a packet lands on it
+    const lifts = arrive[id].flatMap((t) => [[t, 'transform:translateY(0) scale(1)'], [t + 0.16, 'transform:translateY(-3px) scale(1.06)'], [t + 0.5, 'transform:translateY(-3px) scale(1.06)'], [t + 0.75, 'transform:translateY(0) scale(1)']])
+    const icon = `<use href="#ic-${n.icon}" x="${r2(fx - at[n.icon].w / 2)}" y="${r2(fy - at[n.icon].h / 2)}"/>`
+    graph += lifts.length ? `<g class="${keys([[0, 'transform:translateY(0) scale(1)'], ...lifts, [T, 'transform:translateY(0) scale(1)']], '50% 50%')}">${icon}</g>` : icon
+    for (const t of arrive[id]) {
+      const tone = id.startsWith('pod') && updated.includes(t) ? '#10b981' : '#06b6d4'
+      graph += `<rect x="${fx - ICON_W / 2 - 12}" y="${fy - ICON_H / 2 - 9}" width="${ICON_W + 24}" height="${ICON_H + 18}" rx="${(ICON_H + 18) / 2}" fill="none" stroke="${tone}" stroke-width="2" class="${keys([[0, 'opacity:0;transform:scale(.6)'], [t, 'opacity:0;transform:scale(.6)'], [t + 0.02, 'opacity:.9;transform:scale(.6)'], [t + 0.9, 'opacity:0;transform:scale(1.25)'], [T, 'opacity:0;transform:scale(1.25)']])}"/>`
+    }
+    if (n.label) {
+      graph += label(fx, fy + ICON_H / 2 + 17, n.label)
+      graph += d.t(fx, fy + ICON_H / 2 + 33, n.role, { size: 12, w: 700, fill: Z.muted, anchor: 'middle' })
+      if (focus[id]) graph += `<g opacity="0"><animate attributeName="opacity" ${track(focus[id], 0.3)} dur="${T}s" repeatCount="indefinite"/>${d.t(fx, fy + ICON_H / 2 + 33, n.role, { size: 12, w: 700, fill: Z.cyan, anchor: 'middle' })}</g>`
+    }
+  }
+  graph += label(N.pod3.x, N.pod3.y + ICON_H / 2 + 17, 'Web Pods')
+
+  // ---- what happens on the devices: bubbles, marks and the pods' version tags
+  let talk = ''
+  const bubble = (id, text, t0, t1, tone = 'device') => {
+    const n = N[id], w = tw(text, 13, 800) + 26, x = n.x - w / 2, y = iconTop(n) - 42
+    const [fill, stroke, ink] = tone === 'device' ? ['#083344', '#0891b2', Z.cyan] : ['#18181b', '#3f3f46', Z.ink]
+    return pop(t0, t1, '50% 100%', `<rect x="${r2(x)}" y="${y}" width="${r2(w)}" height="30" rx="12" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/><path d="M${n.x - 6} ${y + 29.5}l6 6.5 6-6.5" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round"/><path d="M${n.x - 5} ${y + 29}h10" stroke="${fill}" stroke-width="2"/>${d.t(n.x, y + 20, text, { size: 13, w: 800, fill: ink, anchor: 'middle' })}`)
+  }
+  // a status pill (centred on x, or starting at x), with a check when it's ok
+  const badge = (x, y, text, bg, { ok = false, start = false } = {}) => {
+    const w = tw(text, 11, 900) + 18 + (ok ? 14 : 0)
+    if (start) x += w / 2
+    const check = ok ? `<circle cx="${r2(x + w / 2 - 11)}" cy="${y + 10}" r="6" fill="#10b981"/><path d="M${r2(x + w / 2 - 13.6)} ${y + 10}l1.8 1.8 3.4-3.4" fill="none" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>` : ''
+    return `<rect x="${r2(x - w / 2)}" y="${y}" width="${r2(w)}" height="20" rx="10" fill="${bg}" stroke="${ok ? '#10b981' : HALO}" stroke-width="${ok ? 2 : 3}"/>${d.t(x - (ok ? 7 : 0), y + 14.5, text, { size: 11, w: 900, fill: '#ffffff', anchor: 'middle' })}${check}`
+  }
+  const mark = (x, y, text, bg, t0, t1, opts) => pop(t0, t1, '50% 50%', badge(x, y, text, bg, opts))
+  talk += bubble('ci', 'Typecheck · Tests · Trivy Scan', 1.35, 3.3)
+  talk += mark(N.ci.x, iconTop(N.ci) - 30, 'PASSED', '#047857', 3.45, 17.45)
+  talk += bubble('reg', 'OIDC · No Static Keys', 4.6, 6.15)
+  talk += mark(N.reg.x, iconTop(N.reg) - 30, 'PUSHED', '#047857', 6.3, 17.45)
+  talk += mark(N.eks.x, iconTop(N.eks) - 30, 'ROLLING UPDATE', '#8b5cf6', 7.45, 10.4)
+  talk += mark(N.lb.x, iconTop(N.lb) - 30, 'ZERO DOWNTIME', '#047857', 10.7, 17.45)
+  talk += bubble('cf', 'Tunnel · No Open Ports', 11.75, 13.5)
+  talk += bubble('learner', 'Lesson Loaded', answered + 0.05, 17.55, 'plain')
+  talk += bubble('graf', 'p95 82 ms · 0 Errors', 16.3, 17.5)
+  // each pod's tag: v1, then updating while the new version starts, then v2 (ready)
+  pods.forEach((id, i) => {
+    const n = N[id], bx = n.x + 34, by = n.y - 10, t = updated[i]
+    talk += `<g><animate attributeName="opacity" values="1;1;0;0;1" keyTimes="0;${kt(t)};${kt(t + 0.12)};${kt(17.72)};${kt(17.85)}" dur="${T}s" repeatCount="indefinite"/>${badge(bx, by, 'v1', '#52525b', { start: true })}</g>`
+    talk += mark(bx, by, 'UPDATING', '#8b5cf6', t + 0.02, t + 0.45, { start: true })
+    talk += mark(bx, by, 'v2', '#0e7490', t + 0.72, 17.45, { ok: true, start: true })
+  })
+  d.add(`<g style="animation:rise .6s .25s both">${graph}</g>`)
+  d.add(`<g style="animation:rise .6s .3s both">${packets}${talk}</g>`)
+
+  // ---- built with
   const stack = [['kubernetes', 'Kubernetes'], ['amazonaws', 'AWS Services', { face: '#232f3e' }], ['terraform', 'Terraform'], ['githubactions', 'GitHub Actions'], ['cloudflare', 'Cloudflare'], ['grafana', 'Grafana']]
   let x = 48
-  let row = d.t(x, 175, 'BUILT WITH', { size: 11, w: 900, fill: Z.faint, ls: 1.8 })
+  let row = d.t(x, H - 23, 'BUILT WITH', { size: 11, w: 900, fill: Z.faint, ls: 1.8 })
   x += tw('BUILT WITH', 11, 900, 1.8) + 14
-  stack.forEach(([slug, label, opts = {}]) => {
-    const icon = appIcon(slug, x, 156, 26, { depth: 2.5, ...opts })
+  stack.forEach(([slug, name, opts = {}]) => {
+    const icon = appIcon(slug, x, H - 42, 26, { depth: 2.5, ...opts })
     defs += icon.defs
-    row += icon.body + d.t(x + 34, 175, label, { size: 13.5, w: 800, fill: '#d4d4d8' })
-    x += 34 + tw(label, 13.5, 800) + 20
+    row += icon.body + d.t(x + 34, H - 23, name, { size: 13.5, w: 800, fill: '#d4d4d8' })
+    x += 34 + tw(name, 13.5, 800) + 20
   })
-  d.add(`<g style="animation:rise .6s .1s both">${row}</g>`)
-
-  // ---- scene panel
-  const px = 48, py = 204, pw = W - 96, ph = 238
-  d.add(`<rect x="${px + 0.5}" y="${py + 0.5}" width="${pw - 1}" height="${ph - 1}" rx="20" fill="#0c0c0f" stroke="#27272a"/>`)
-  const nodes = [['laptop', '#52525b', 'Commit'], ['shield', '#16a34a', 'CI Security Checks'], ['package', '#d97706', 'Image Registry'], ['cluster', '#326ce5', 'Kubernetes On AWS'], ['cloud', '#ea7a1a', 'Cloudflare Tunnel'], ['users', '#7c3aed', 'Learners']]
-  const step = pw / nodes.length, cy = py + 96, icon = 56
-  const cxs = nodes.map((_, i) => px + step * (i + 0.5))
-  // links between devices
-  let scene = ''
-  for (let i = 0; i < nodes.length - 1; i++) scene += `<path d="M${r2(cxs[i] + icon / 2 + 10)} ${cy}H${r2(cxs[i + 1] - icon / 2 - 10)}" stroke="#3f3f46" stroke-width="2.5" stroke-linecap="round"/>`
-  nodes.forEach(([glyph, face, label], i) => {
-    const t = glyphTile(GLYPHS[glyph], cxs[i] - icon / 2, cy - icon / 2, icon, face)
-    defs += t.defs
-    scene += t.body + d.t(cxs[i], cy + 52, label, { size: 12.5, w: 900, fill: '#e4e4e7', anchor: 'middle' })
-  })
-  d.add(`<g style="animation:rise .6s .2s both">${scene}</g>`)
-
-  const pct = (t) => r2((Math.max(0, Math.min(T, t)) / T) * 100)
-  const kt = (t) => r2((Math.max(0, Math.min(T, t)) / T) * 1e4) / 1e4
-  // a pop: springs in at t0, holds, fades by t1 (CSS, so it can overshoot like the lessons' cubic-bezier)
-  let popId = 0
-  const pop = (t0, t1, origin, body) => {
-    const id = `p${popId++}`
-    css += `@keyframes ${id}{0%,${pct(t0)}%{opacity:0;transform:scale(.6)}${pct(t0 + 0.22)}%{opacity:1;transform:scale(1.07)}${pct(t0 + 0.38)}%,${pct(t1)}%{opacity:1;transform:scale(1)}${pct(t1 + 0.25)}%,100%{opacity:0;transform:scale(.92)}}.${id}{transform-origin:${origin};animation:${id} ${T}s linear infinite}`
-    return `<g class="pop ${id}">${body}</g>`
-  }
-  // a speech bubble above node i
-  const bubble = (i, text, t0, t1, tone = 'plain') => {
-    const w = tw(text, 12.5, 800) + 24, bx = cxs[i] - w / 2, by = cy - icon / 2 - 46
-    const [fill, stroke, ink] = tone === 'device' ? ['#083344', '#0891b2', Z.cyan] : ['#18181b', '#3f3f46', Z.ink]
-    return pop(t0, t1, '50% 100%', `<rect x="${r2(bx)}" y="${by}" width="${r2(w)}" height="28" rx="10" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/><path d="M${r2(cxs[i] - 6)} ${by + 27.5}l6 7 6-7" fill="${fill}" stroke="${stroke}" stroke-width="1.5" stroke-linejoin="round"/><path d="M${r2(cxs[i] - 5)} ${by + 27}h10" stroke="${fill}" stroke-width="2"/>${d.t(cxs[i], by + 18.5, text, { size: 12.5, w: 800, fill: ink, anchor: 'middle' })}`)
-  }
-  // a mark on node i's top-right corner
-  const mark = (i, text, color, t0, t1) => {
-    const w = tw(text, 10, 900, 0.6) + 16, mx = cxs[i] + icon / 2 - 14, my = cy - icon / 2 - 16
-    return pop(t0, t1, '0% 50%', `<rect x="${r2(mx)}" y="${my}" width="${r2(w)}" height="20" rx="10" fill="${color}" stroke="#0c0c0f" stroke-width="3" paint-order="stroke"/>${d.t(mx + 8, my + 14, text, { size: 10, w: 900, fill: '#ffffff', ls: 0.6 })}`)
-  }
-  // a packet riding the links from node a to node b between t0 and t1
-  const packet = (a, b, text, t0, t1) => {
-    const w = tw(text, 11, 900) + 20
-    const path = `M${r2(cxs[a])} ${cy}L${r2(cxs[b])} ${cy}`
-    return `<g opacity="0"><animateMotion path="${path}" keyPoints="0;0;1;1" keyTimes="0;${kt(t0)};${kt(t1)};1" calcMode="linear" dur="${T}s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${kt(t0)};${kt(t0 + 0.12)};${kt(t1 - 0.12)};${kt(t1)};1" dur="${T}s" repeatCount="indefinite"/>
-  <rect x="${r2(-w / 2)}" y="-11" width="${r2(w)}" height="22" rx="11" fill="#06b6d4" stroke="#0c0c0f" stroke-width="4" paint-order="stroke"/>${d.t(0, 4, text, { size: 11, w: 900, fill: '#083344', anchor: 'middle' })}</g>`
-  }
-  let anim = ''
-  anim += packet(0, 1, 'git push', 0.3, 1.4)
-  anim += bubble(1, 'Typecheck · Tests · Security Scan', 1.4, 3.1, 'device')
-  anim += mark(1, 'PASSED', '#10b981', 2.7, 13.5)
-  anim += packet(1, 2, 'Image', 3.3, 4.4)
-  anim += bubble(2, 'OIDC · No Static Keys', 4.4, 5.8, 'device')
-  anim += mark(2, 'IMMUTABLE TAG', '#d97706', 5.0, 13.5)
-  anim += packet(2, 3, 'Rollout', 5.9, 7.0)
-  anim += mark(3, 'ROLLED OUT', '#10b981', 7.0, 13.5)
-  anim += packet(5, 3, 'GET /learn', 7.6, 9.6)
-  anim += bubble(4, 'Tunnel · No Open Ports', 8.2, 9.8)
-  anim += packet(3, 5, '200 OK', 9.9, 11.9)
-  anim += bubble(5, 'Lesson Loaded', 11.9, 13.4)
-  anim += bubble(3, 'Metrics In Grafana', 12.0, 13.5, 'device')
-  d.add(anim)
-
-  // lesson-style step chips; the current step lights up
-  const steps = [['Commit', 0, 1.6], ['Check', 1.6, 3.3], ['Publish', 3.3, 5.9], ['Deploy', 5.9, 7.6], ['Serve', 7.6, 12.0], ['Observe', 12.0, 13.8]]
-  const chipW = steps.map(([s]) => tw(s, 12, 800) + 46)
-  let cx = W / 2 - (chipW.reduce((a, b) => a + b, 0) + 10 * (steps.length - 1)) / 2
-  let chips = ''
-  steps.forEach(([label, t0, t1], i) => {
-    const w = chipW[i], y = py + ph - 46
-    chips += `<rect x="${r2(cx)}" y="${y}" width="${r2(w)}" height="30" rx="15" fill="#18181b" stroke="#27272a"/>`
-    chips += `<rect x="${r2(cx)}" y="${y}" width="${r2(w)}" height="30" rx="15" fill="#083344" stroke="#06b6d4" opacity="0"><animate attributeName="opacity" values="0;0;1;1;0;0" keyTimes="0;${kt(t0)};${kt(t0 + 0.15)};${kt(t1 - 0.15)};${kt(t1)};1" dur="${T}s" repeatCount="indefinite"/></rect>`
-    chips += `<circle cx="${r2(cx + 16)}" cy="${y + 15}" r="10" fill="#27272a"/>${d.t(cx + 16, y + 19, String(i + 1), { size: 11, w: 900, fill: '#e4e4e7', anchor: 'middle' })}${d.t(cx + 32, y + 19.5, label, { size: 12, w: 800, fill: '#d4d4d8' })}`
-    cx += w + 10
-  })
-  d.add(`<g style="animation:rise .6s .3s both">${chips}</g>`)
+  d.add(`<g style="animation:rise .6s .35s both">${row}</g>`)
   return d.render(defs, css)
 }
 
@@ -285,13 +471,16 @@ function techStack() {
       const cx = x + 22 + slot * (i + (6 - items.length) / 2) + slot / 2
       const icon = appIcon(slug, cx - size / 2, y + 56, size, opts)
       defs += icon.defs
-      s += `<g class="pop" style="animation-delay:${r2(0.15 + gi * 0.08 + i * 0.05)}s">${icon.body}</g>`
+      // the hop wave runs left to right and down the rows
+      const hop = 1.8 + ((cx - P) / (W - 2 * P)) * 1.2 + Math.floor(gi / 2) * 0.5
+      s += `<g class="hop" style="animation-delay:${r2(hop)}s"><g class="pop" style="animation-delay:${r2(0.15 + gi * 0.08 + i * 0.05)}s">${icon.body}</g></g>`
       s += d.t(cx, y + 142, label, { size: 12.5, w: 800, fill: '#d4d4d8', anchor: 'middle' })
     })
     d.add(`<g style="animation:rise .6s ${r2(0.06 + gi * 0.07)}s both">${s}</g>`)
   })
   return d.render(defs, `@keyframes rise{from{opacity:0;transform:translateY(12px)}}
-.pop{transform-box:fill-box;transform-origin:center;animation:pop .55s cubic-bezier(.2,.9,.3,1.35) both}@keyframes pop{from{opacity:0;transform:scale(.6)}}`)
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .55s cubic-bezier(.2,.9,.3,1.35) both}@keyframes pop{from{opacity:0;transform:scale(.6)}}
+${HOP}`)
 }
 
 // ================================================================== AI TOOLS
@@ -308,13 +497,18 @@ function aiTools() {
     let s = duo(x, y, cardW, 92, { r: 18, sm: true, depth: 4 })
     const icon = appIcon(slug, x + 18, y + 16, 60, opts)
     defs += icon.defs
-    s += `<g class="pop" style="animation-delay:${r2(0.2 + i * 0.1)}s">${icon.body}</g>`
+    // an online dot on each disc, like a chat avatar, pinging out of step with its neighbours
+    const ox = x + 18 + 52, oy = y + 16 + 52
+    const online = `<circle cx="${ox}" cy="${oy}" r="6.5" fill="${Z.green}" stroke="#18181b" stroke-width="3" paint-order="stroke"/><circle cx="${ox}" cy="${oy}" r="6.5" fill="none" stroke="${Z.green}" stroke-width="1.5" class="fb ping" style="animation-delay:${r2(i * 0.6)}s"/>`
+    s += `<g class="hop" style="animation-delay:${r2(1.8 + i * 0.22)}s"><g class="pop" style="animation-delay:${r2(0.2 + i * 0.1)}s">${icon.body}${online}</g></g>`
     s += d.t(x + 96, y + 44, name, { size: 22, w: 900, fill: Z.ink, ls: -0.4 })
     s += d.t(x + 96, y + 67, `By ${maker}`, { size: 14, w: 700, fill: Z.muted })
     d.add(`<g style="animation:rise .6s ${r2(0.08 + i * 0.08)}s both">${s}</g>`)
   })
   return d.render(defs, `@keyframes rise{from{opacity:0;transform:translateY(12px)}}
-.pop{transform-box:fill-box;transform-origin:center;animation:pop .55s cubic-bezier(.2,.9,.3,1.35) both}@keyframes pop{from{opacity:0;transform:scale(.6)}}`)
+.pop{transform-box:fill-box;transform-origin:center;animation:pop .55s cubic-bezier(.2,.9,.3,1.35) both}@keyframes pop{from{opacity:0;transform:scale(.6)}}
+.ping{animation:ping 1.8s ease-out infinite}@keyframes ping{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(2.4);opacity:0}}
+${HOP}`)
 }
 
 // ================================================================== CERTIFICATIONS
@@ -332,8 +526,10 @@ function certifications() {
   // hexagon on Associate blue (the official badge artwork can't be fetched here; swap it in at vendor/).
   const certs = [
     { status: 'EARNED', color: Z.green, name: ['Cisco Certified', 'Network Associate'], meta: '200-301 · 19 Mar 2026', face: '#fafafa', earned: true,
+      ring: (cx, cy, r) => `<circle cx="${r2(cx)}" cy="${cy + 2.5}" r="${r + 9}" fill="none" stroke="${Z.green}" stroke-width="2" class="fb halo"/>`,
       mark: (cx, cy, r) => { const s = r * 1.74; return `<image x="${r2(cx - s / 2)}" y="${r2(cy - s / 2)}" width="${r2(s)}" height="${r2(s)}" clip-path="url(#ccnaClip)" href="data:image/png;base64,${b64(join(VENDOR, 'ccna.png'))}"/>` } },
     { status: 'PREPARING · NOV 2026', color: Z.amber, name: ['AWS Solutions Architect', 'Associate'], meta: 'SAA-C03', face: '#2563eb', dim: 0.82, pulse: true,
+      ring: (cx, cy, r) => { const R = r + 9, n = Math.round((2 * Math.PI * R) / 14); return `<circle cx="${r2(cx)}" cy="${cy + 2.5}" r="${R}" fill="none" stroke="${Z.amber}" stroke-opacity=".85" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="4 ${r2((2 * Math.PI * R) / n - 4)}" class="fb spin"/>` },
       mark: (cx, cy, r) => { const k = (r * 0.84) / 24; return `<polygon points="${hexagon(cx, cy, r * 0.74)}" fill="#ffffff" fill-opacity=".1" stroke="#ffffff" stroke-opacity=".85" stroke-width="2.5" stroke-linejoin="round"/><g transform="translate(${r2(cx - 12 * k)} ${r2(cy - 11.8 * k)}) scale(${r2(k)})">${awsWhite}</g>` } },
     { status: 'PLANNED', color: Z.muted, name: ['Certified Kubernetes', 'Administrator'], meta: 'CNCF · Linux Foundation', face: '#326ce5', dim: 0.5,
       mark: (cx, cy, r) => { const s = r * 1.5; return `<image x="${r2(cx - s / 2)}" y="${r2(cy - s / 2)}" width="${r2(s)}" height="${r2(s)}" href="data:image/svg+xml;base64,${b64(join(VENDOR, 'kubernetes-cka-white.svg'))}"/>` } },
@@ -372,7 +568,7 @@ ${pill(d, W - x0, 76, 'CCNA VERIFIED ON CREDLY', { color: Z.green, size: 11, anc
   rail += node(centres[0], 'okFace', '#15803d', `<path d="M${r2(centres[0] - 6)} ${railY}l4 4 8-8" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>`)
   rail += node(centres[1], 'amberFace', '#b45309', `<circle cx="${r2(centres[1])}" cy="${railY}" r="4" fill="#fff"/><circle cx="${r2(centres[1])}" cy="${railY}" r="4" fill="none" stroke="#fff" stroke-width="1.5" class="fb ping"/>`)
   rail += node(centres[2], 'zincFace', '#27272a', `<circle cx="${r2(centres[2])}" cy="${railY}" r="4" fill="#a1a1aa"/>`)
-  rail += node(centres[3], 'violetFace', '#5b21b6', `<path d="${star(centres[3], railY + 0.5, 6.5)}" fill="#fff"/>`)
+  rail += node(centres[3], 'violetFace', '#5b21b6', `<path d="${star(centres[3], railY + 0.5, 6.5)}" fill="#fff" class="twinkle" style="transform-origin:${r2(centres[3])}px ${railY + 0.5}px"/>`)
   d.add(`<g style="animation:rise .6s .08s both">${rail}</g>`)
   certs.forEach((c, i) => {
     const x = x0 + i * (tileW + gap), cx = x + tileW / 2
@@ -383,14 +579,19 @@ ${pill(d, W - x0, 76, 'CCNA VERIFIED ON CREDLY', { color: Z.green, size: 11, anc
     if (c.earned) defs += `<clipPath id="ccnaClip"><circle cx="${r2(cx)}" cy="${dcy}" r="${dr - 3}"/></clipPath>`
     const discSvg = `<circle cx="${r2(cx)}" cy="${dcy + depth}" r="${dr}" fill="${mix(c.face, '#000000', c.earned ? 0.55 : 0.42)}"/><circle cx="${r2(cx)}" cy="${dcy}" r="${dr}" fill="url(#${gid})"/>` +
       `<circle cx="${r2(cx)}" cy="${dcy}" r="${dr - 1}" fill="none" stroke="#ffffff" stroke-opacity="${c.earned ? 0.9 : 0.18}" stroke-width="2"/>${c.mark(cx, dcy, dr)}`
-    g += c.dim ? `<g filter="url(#${c.dim > 0.55 ? 'half' : 'mono'})" opacity="${c.dim}">${discSvg}</g>` : discSvg
+    const disc = (c.dim ? `<g filter="url(#${c.dim > 0.55 ? 'half' : 'mono'})" opacity="${c.dim}">${discSvg}</g>` : discSvg) + (c.ring?.(cx, dcy, dr) ?? '')
+    g += `<g class="float" style="animation-delay:-${r2(i * 1.1)}s">${disc}</g>`
     c.name.forEach((line, k) => { g += d.t(cx, ty + 184 + k * 20, line, { size: 15.5, w: 800, fill: c.dim ? '#d4d4d8' : Z.ink, anchor: 'middle' }) })
     g += d.t(cx, ty + 228, c.meta, { size: 12.5, w: 700, fill: Z.muted, anchor: 'middle' })
     g += pill(d, cx, ty + tileH - 42, c.status, { color: c.color, size: 10.5, anchor: 'middle', dot: c.pulse }).svg
     d.add(`<g style="animation:rise .6s ${r2(0.12 + i * 0.1)}s both">${g}</g>`)
   })
   return d.render(defs, `@keyframes rise{from{opacity:0;transform:translateY(12px)}}
-@keyframes ping{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(2.6);opacity:0}}.ping{animation:ping 1.8s ease-out infinite}`)
+@keyframes ping{0%{transform:scale(1);opacity:.8}80%,100%{transform:scale(2.6);opacity:0}}.ping{animation:ping 1.8s ease-out infinite}
+.float{animation:float 4.4s ease-in-out infinite}@keyframes float{50%{transform:translateY(-4px)}}
+.halo{animation:halo 3s ease-in-out infinite}@keyframes halo{0%,100%{opacity:.12;transform:scale(.97)}50%{opacity:.55;transform:scale(1.03)}}
+.spin{animation:spin 18s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+.twinkle{animation:twinkle 3.2s ease-in-out infinite}@keyframes twinkle{0%,62%{transform:rotate(0) scale(1)}80%{transform:rotate(36deg) scale(1.35)}100%{transform:rotate(72deg) scale(1)}}`)
 }
 
 // ================================================================== CCNA-LABS (learning-path card)
@@ -427,6 +628,14 @@ function labs() {
 
   // tiles: five domains + environments
   const colW = (W - 96 - 20) / 2, rowH = 86, y0 = 130, gapY = 18
+  // After the entrance, a verify wave runs down the domains every 7 s: each check redraws, its disc
+  // pings, and a light runs along its bar; the environment bars shine last.
+  const wave = (i) => 2.2 + i * 0.3
+  defs += `<linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff" stop-opacity=".75"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>`
+  const shine = (id, bx, by, bw, begin) => {
+    defs += `<clipPath id="${id}"><rect x="${r2(bx)}" y="${by}" width="${r2(bw)}" height="6" rx="3"/></clipPath>`
+    return `<g clip-path="url(#${id})"><rect x="${r2(bx - 70)}" y="${by}" width="70" height="6" fill="url(#shine)"><animate attributeName="x" values="${r2(bx - 70)};${r2(bx + bw)};${r2(bx + bw)}" keyTimes="0;.2;1" dur="7s" begin="${r2(begin)}s" repeatCount="indefinite"/></rect></g>`
+  }
   const tiles = [...groups.map((g) => ({ ...g, count: g.ids.length })), { name: 'Lab Environments', env: true }]
   tiles.forEach((g, i) => {
     const col = i % 2, row = Math.floor(i / 2)
@@ -434,14 +643,15 @@ function labs() {
     const delay = r2(0.2 + i * 0.1)
     let s = duo(x, y, colW, rowH, { r: 16, sm: true, depth: 3 })
     if (!g.env) {
-      // DONE tile with the check drawing in
-      // a solid green disc; its white check draws in
-      s += disc('', x + 16, y + 16, 40, '#16a34a') + `<path d="M${x + 27} ${y + 36}l6 6 12-12" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="26" style="animation:check .5s ${r2(delay + 0.5)}s ease-out both"/>`
+      // a solid green disc; its white check draws in, then redraws with each verify wave
+      s += disc('', x + 16, y + 16, 40, '#16a34a') + `<path d="M${x + 27} ${y + 36}l6 6 12-12" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="26" style="animation:check .5s ${r2(delay + 0.5)}s ease-out both,recheck 7s ${r2(wave(i))}s infinite"/>` +
+        `<circle cx="${x + 36}" cy="${y + 36}" r="20" fill="none" stroke="${Z.green}" stroke-width="2" opacity="0" class="fb verify" style="animation-delay:${r2(wave(i))}s"/>`
       s += d.t(x + 72, y + 33, g.name, { size: 17, w: 800, fill: Z.ink })
       s += d.t(x + colW - 18, y + 33, `${g.count} LABS`, { size: 11.5, w: 900, fill: Z.muted, ls: 1.2, anchor: 'end' })
       s += d.t(x + 72, y + 53, g.topics, { size: 13, w: 700, fill: Z.muted })
       const bw = colW - 72 - 18
       s += `<rect x="${x + 72}" y="${y + 64}" width="${r2(bw)}" height="6" rx="3" fill="#27272a"/><rect x="${x + 72}" y="${y + 64}" width="${r2(bw)}" height="6" rx="3" fill="#22c55e" class="bar" style="animation:fill 1s ${r2(delay + 0.2)}s cubic-bezier(.2,.8,.2,1) both"/>`
+      s += shine(`lb${i}`, x + 72, y + 64, bw, wave(i) + 0.45)
     } else {
       s += disc('monitor', x + 16, y + 16, 40, '#0891b2')
       s += d.t(x + 72, y + 33, g.name, { size: 17, w: 800, fill: Z.ink })
@@ -452,11 +662,14 @@ function labs() {
         s += d.t(bx, y + 53, label, { size: 13, w: 700, fill: Z.muted })
         s += d.t(bx + bw, y + 53, String(n), { size: 13, w: 900, fill: Z.ink, anchor: 'end' })
         s += `<rect x="${r2(bx)}" y="${y + 64}" width="${r2(bw)}" height="6" rx="3" fill="#27272a"/><rect x="${r2(bx)}" y="${y + 64}" width="${r2(bw * n / dirs.length)}" height="6" rx="3" fill="${color}" class="bar" style="animation:fill 1s ${r2(delay + 0.2 + k * 0.15)}s cubic-bezier(.2,.8,.2,1) both"/>`
+        s += shine(`le${k}`, bx, y + 64, (bw * n) / dirs.length, wave(i) + 0.45 + k * 0.2)
       })
     }
     d.add(`<g style="animation:rise .6s ${delay}s both">${s}</g>`)
   })
   return d.render(defs, `@keyframes rise{from{opacity:0;transform:translateY(12px)}}@keyframes check{from{stroke-dashoffset:26}to{stroke-dashoffset:0}}
+@keyframes recheck{0%{stroke-dashoffset:26;animation-timing-function:ease-out}7%,100%{stroke-dashoffset:0}}
+.verify{animation:verify 7s ease-out infinite}@keyframes verify{0%,6%{transform:scale(1);opacity:0}8%{opacity:.75}22%,100%{transform:scale(1.6);opacity:0}}
 .bar{transform-box:fill-box;transform-origin:left center}@keyframes fill{from{transform:scaleX(0)}}`)
 }
 
@@ -469,16 +682,22 @@ function footer() {
   const widths = parts.map(([w, s]) => tw(w + s, size, 950, ls))
   const space = 18
   let x = (W - widths.reduce((a, b) => a + b, 0) - space * 2) / 2
-  const defs = `${duoDefs}<clipPath id="fl"><rect x="0" y="40" width="${W}" height="${size + 22}"/></clipPath>
+  // a light runs through the motto every 7 s, as through the hero's name, and another along the hairline
+  const x0 = x, x1 = W - x, span = x1 - x0
+  const ink = (id, base) => `<linearGradient id="${id}" gradientUnits="userSpaceOnUse" x1="${r2(x0)}" y1="0" x2="${r2(x1)}" y2="0"><stop offset="0" stop-color="${base}"/><stop offset=".44" stop-color="${base}"/><stop offset=".5" stop-color="#a5f3fc"/><stop offset=".56" stop-color="${base}"/><stop offset="1" stop-color="${base}"/><animateTransform attributeName="gradientTransform" type="translate" values="-${r2(span)} 0;-${r2(span)} 0;${r2(span)} 0" keyTimes="0;.45;1" dur="7s" begin="1.6s" repeatCount="indefinite"/></linearGradient>`
+  const defs = `${duoDefs}<clipPath id="fl"><rect x="0" y="40" width="${W}" height="${size + 22}"/></clipPath>${ink('inkSoft', '#d4d4d8')}${ink('inkBright', Z.ink)}
+<clipPath id="hl"><rect x="${W / 2 - 160}" y="122" width="320" height="2" rx="1"/></clipPath>
+<linearGradient id="hlight" x1="0" x2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0"/><stop offset=".5" stop-color="#ffffff"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
 <linearGradient id="hline" x1="0" x2="1"><stop offset="0" stop-color="#a5f3fc" stop-opacity="0"/><stop offset=".16" stop-color="#a5f3fc" stop-opacity=".6"/><stop offset=".5" stop-color="#f2fdff"/><stop offset=".84" stop-color="#a5f3fc" stop-opacity=".6"/><stop offset="1" stop-color="#a5f3fc" stop-opacity="0"/></linearGradient>
 <filter id="hglow" x="-10%" y="-400%" width="120%" height="900%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>`
   d.add(duo(0, 0, W, H - 4, { r: 24 }))
   d.add(`<g clip-path="url(#fl)">${parts.map(([w, s], i) => {
-    const out = `<g style="animation:lineUp .9s ${r2(0.15 + i * 0.16)}s cubic-bezier(.2,.8,.2,1) both">${d.t(x, 94, '', { size, w: 950, fill: i === 1 ? Z.ink : '#d4d4d8', ls, spans: [[w, null], [s, Z.cyan]] })}</g>`
+    const out = `<g style="animation:lineUp .9s ${r2(0.15 + i * 0.16)}s cubic-bezier(.2,.8,.2,1) both">${d.t(x, 94, '', { size, w: 950, fill: i === 1 ? 'url(#inkBright)' : 'url(#inkSoft)', ls, spans: [[w, null], [s, Z.cyan]] })}</g>`
     x += widths[i] + space
     return out
   }).join('')}</g>`)
-  d.add(`<rect x="${W / 2 - 160}" y="122" width="320" height="2" rx="1" fill="url(#hline)" filter="url(#hglow)" class="fb" style="animation:grow 1.1s .7s cubic-bezier(.2,.8,.2,1) both"/>`)
+  d.add(`<rect x="${W / 2 - 160}" y="122" width="320" height="2" rx="1" fill="url(#hline)" filter="url(#hglow)" class="fb" style="animation:grow 1.1s .7s cubic-bezier(.2,.8,.2,1) both"/>
+<g filter="url(#hglow)"><g clip-path="url(#hl)"><rect x="${W / 2 - 230}" y="122" width="70" height="2" fill="url(#hlight)" opacity="0"><animate attributeName="x" values="${W / 2 - 230};${W / 2 + 160}" dur="3.5s" begin="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.25;.75;1" dur="3.5s" begin="2s" repeatCount="indefinite"/></rect></g></g>`)
   d.add(`<g style="animation:rise .7s 1s both">${d.t(W / 2, 160, '', { size: 14, w: 700, fill: Z.muted, anchor: 'middle', spans: [['Dat Tran Gia', '#d4d4d8'], [' · Network Engineer On The DevSecOps Path · Ho Chi Minh City', null]] })}</g>`)
   return d.render(defs, `@keyframes lineUp{from{transform:translateY(${size + 16}px)}}@keyframes grow{from{transform:scaleX(0);opacity:0}}@keyframes rise{from{opacity:0;transform:translateY(10px)}}`)
 }
